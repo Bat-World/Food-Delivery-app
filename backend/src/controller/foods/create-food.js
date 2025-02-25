@@ -2,13 +2,14 @@ import foodModel from "../../models/food.scheme.js";
 
 export const createFood = async (req, res) => {
   try {
-    const { name, price, image, ingredients } = req.body;
+    const { name, price, image, ingredients, category } = req.body;
 
     const newFood = new foodModel({
       name,
       price,
       image,
       ingredients,
+      category,
     });
 
     const savedFood = await newFood.save();
