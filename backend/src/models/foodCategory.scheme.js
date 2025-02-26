@@ -6,7 +6,7 @@ const categorySchema = new Schema(
     categoryName: { type: String, required: true },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true, 
   }
 );
 

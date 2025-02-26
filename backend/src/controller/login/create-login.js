@@ -1,11 +1,15 @@
 import { userModel } from "../../models/user.scheme.js";
 import bcrypt from 'bcryptjs';  
+import jwt from "jsonwebtoken";
+
+const secretKey = process.env.SECRET_KEY
 
 const createLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
         
         const user = await userModel.findOne({ email });
+        var token = jwt.sign({email, password}, secretKey);
 
         if (!user) {
             return res.status(400).json({ message: "User not found" });
@@ -19,6 +23,7 @@ const createLogin = async (req, res) => {
 
         return res.status(200).json({
             message: "Login successful",
+            token: token
         });
     } catch (error) {
         console.error(error);
