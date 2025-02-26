@@ -1,10 +1,20 @@
 import foodOrderModel from "../../models/foodOrder.scheme.js";
 
-export const getAllOrders = async (req, res) => {
-try{
-    const orders = await foodOrderModel.find().populate("user");
-    req.Json(orders);
-}
-catch(error){}
+const getOrderById = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    
+    const order = await foodOrderModel.findById(orderId).populate("user");
 
-}
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json(order);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to retrieve order", error });
+  }
+};
+
+export default getOrderById;

@@ -13,7 +13,7 @@ const userSchema = new Schema(
       enum: ['user', 'admin'], 
       default: 'user'  
     },
-    orderedFoods: { type: [Schema.Types.ObjectId], ref: "orders", default: [] },  
+    orderedFoods: { type: [Schema.Types.ObjectId], ref: "FoodOrder", default: [] },  
     isVerified: { type: Boolean, default: false },  
     ttl: { type: Date, default: Date.now },
   },
