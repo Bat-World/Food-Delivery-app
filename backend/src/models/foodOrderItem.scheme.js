@@ -7,8 +7,7 @@ export const foodOrderItemSchema = new Schema(
     quantity: { type: Number, required: true }, 
   },
   {
-    timestamps: true, 
+    _id: false
   }
 );
 
-export const foodOrderItemModel = model('FoodOrderItem', foodOrderItemSchema);

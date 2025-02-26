@@ -10,7 +10,7 @@ const foodSchema = new Schema(
     category: {type: Schema.Types.ObjectId, req: "Category", required: true},
   },
   {
-    timestamps: true, // This automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 

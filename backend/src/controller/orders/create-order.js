@@ -1,21 +1,28 @@
 
 import foodOrderModel from "../../models/foodOrder.scheme.js";
+import { userModel } from "../../models/user.scheme.js";
 
 
 export const createOrder = async (req, res) => { 
     try {
         const { orderItems, totalPrice, status, user, foodOrderItems } = req.body;
-        const newOrder = new foodOrderModel({
+        const newOrder = await foodOrderModel.create({
             foodOrderItems,
             orderItems,
             totalPrice,
             status,
             user,
         });
-        const savedOrder = await newOrder.save();
+        const userData = await userModel.findById(user);
+        console.log(newOrder);
+        
+        // const updatedUser = {...userData, orderedFoods: [...userData.orderedFoods, newOrder._id]}
+
+        await userModel.findOneAndUpdate({_id:user}, {orderedFoods: [...userData.orderedFoods, newOrder._id]})
+
         res.status(201).json({
             message: "Order created successfully!",
-            order: savedOrder
+            order: newOrder
         });
     } catch (error) {
         console.error(error);

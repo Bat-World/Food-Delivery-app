@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { foodOrderItemModel } from '../../src/models/foodOrderItem.scheme.js';
+import { foodOrderItemSchema } from '../../src/models/foodOrderItem.scheme.js';
 const { Schema, model } = mongoose;
 
 const foodOrderSchema = new Schema(
@@ -14,8 +14,7 @@ const foodOrderSchema = new Schema(
       required: true 
     },
     foodOrderItems: { 
-      type: [Schema.Types.ObjectId], 
-      ref: 'FoodOrderItem', 
+      type: [foodOrderItemSchema], 
       required: true 
     },
     status: { 

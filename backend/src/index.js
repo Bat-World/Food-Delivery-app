@@ -5,6 +5,7 @@ import express from 'express';
 import { userRouter } from './routes/user-router.js';
 import { connectToDatabase } from './database/index.js';
 import { foodRouter } from './routes/food-router.js';
+import { loginRouter } from './routes/login-router.js';
 
 
 const app = express();
@@ -14,8 +15,9 @@ connectToDatabase();
 app.use(express.json());
 
 
-app.use('/users', userRouter);
-app.use('/foods', foodRouter);
+app.use('/user', userRouter);
+app.use('/food', foodRouter);
+app.use('/login', loginRouter);
 
 
 app.listen(PORT, () => {
