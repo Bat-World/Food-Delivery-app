@@ -6,13 +6,18 @@ import { userRouter } from './routes/user-router.js';
 import { connectToDatabase } from './database/index.js';
 import { foodRouter } from './routes/food-router.js';
 import { loginRouter } from './routes/login-router.js';
+import cors from 'cors'; 
 
 
 const app = express();
 const PORT = 9000;
 
+
+app.use(cors());
+
 connectToDatabase();
 app.use(express.json());
+
 
 
 app.use('/user', userRouter);

@@ -9,7 +9,7 @@ import { Authorization } from "../middleware/authorization.js";
 
 export const userRouter = Router();
 
-userRouter.post("/", createUser)
+userRouter.post("/signup", createUser)
 userRouter.delete("/", Authorization, deleteUser);
 userRouter.get("/:id", Authorization, getUser);
 userRouter.put('/:id', Authorization, updateUser);
