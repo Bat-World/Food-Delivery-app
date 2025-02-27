@@ -14,10 +14,6 @@ export const createOrder = async (req, res) => {
             user,
         });
         const userData = await userModel.findById(user);
-        console.log(newOrder);
-        
-        // const updatedUser = {...userData, orderedFoods: [...userData.orderedFoods, newOrder._id]}
-
         await userModel.findOneAndUpdate({_id:user}, {orderedFoods: [...userData.orderedFoods, newOrder._id]})
 
         res.status(201).json({
