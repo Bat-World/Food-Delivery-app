@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { userModel } from "../../models/user.scheme.js";
 
 dotenv.config();
 
@@ -13,12 +14,13 @@ const transporter = nodemailer.createTransport({
 
 export const sendPasswordResetEmail = async (req, res) => {
   const { email } = req.body;
+  const { id } = req.params;
 
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
 
-  const resetLink = `http://localhost:3000/reset-password?email=${email}&token=dummyToken`;
+  const resetLink = `http://localhost:9000/user/${id}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,

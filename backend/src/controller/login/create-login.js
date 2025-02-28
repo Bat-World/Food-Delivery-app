@@ -9,7 +9,7 @@ const createLogin = async (req, res) => {
         const { email, password } = req.body;
         
         const user = await userModel.findOne({ email });
-        var token = jwt.sign({email, password}, secretKey);
+        var token = jwt.sign({email, role}, secretKey);
 
         if (!user) {
             return res.status(400).json({ message: "User not found" });

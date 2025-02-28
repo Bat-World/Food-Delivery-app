@@ -12,5 +12,5 @@ export const userRouter = Router();
 userRouter.post("/signup", createUser)
 userRouter.delete("/", Authorization, deleteUser);
 userRouter.get("/:id", Authorization, getUser);
-userRouter.put('/:id', Authorization, updateUser);
+userRouter.put('/:id', updateUser);
 

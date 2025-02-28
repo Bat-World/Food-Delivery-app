@@ -1,38 +1,45 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import mongoose from "mongoose";
 import { userModel } from "../../models/user.scheme.js";
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { password } = req.body;
+  const { role } = req.body;
 
+  // Ensure the role is provided and is either 'user' or 'admin'
+  if (!role || !["user", "admin"].includes(role)) {
+    return res
+      .status(400)
+      .json({
+        message: "Invalid role provided. It must be 'user' or 'admin'.",
+      });
+  }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid user ID format" });
   }
 
   try {
-
-    const saltRounds = 10; 
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-   
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
-      { password: hashedPassword },
+      { role },
       { new: true }
     );
-
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Return the updated user (excluding the password for security)
     const userWithoutPassword = updatedUser.toObject();
     delete userWithoutPassword.password;
-    return res.status(200).json(userWithoutPassword);
+    return res
+      .status(200)
+      .json({
+        message: "User role updated successfully",
+        user: userWithoutPassword,
+      });
   } catch (err) {
-    return res.status(500).json({ message: "Error updating user", error: err });
+    return res
+      .status(500)
+      .json({ message: "Error updating user role", error: err });
   }
 };

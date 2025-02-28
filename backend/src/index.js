@@ -1,5 +1,4 @@
 import express from 'express';
-import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';  
 import cors from 'cors'; 
 import { userRouter } from './routes/user-router.js';
