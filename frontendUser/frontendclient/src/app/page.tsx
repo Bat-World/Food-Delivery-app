@@ -20,13 +20,13 @@ const NomNomPage = () => {
       <div className='w-full h-[80vw] bg-white'></div>
 
       {/* Banner */}
-      {/* <section className="relative text-center p-10 bg-cover bg-center" style={{ backgroundImage: "url('https://via.placeholder.com/1200')" }}>
+      <section className="relative text-center p-10 bg-cover bg-center" style={{ backgroundImage: "url('https://via.placeholder.com/1200')" }}>
         <h2 className="text-5xl font-bold">Today's Steak Society Offer!</h2>
         <button className="mt-4 bg-red-600 text-white px-6 py-3 rounded-lg">Order Now</button>
-      </section> */}
+      </section>
 
       {/* Categories */}
-      {/* <nav className="flex justify-center space-x-4 p-4 bg-gray-800">
+      <nav className="flex justify-center space-x-4 p-4 bg-gray-800">
         <button className="text-red-500">Appetizer</button>
         <button>Salads</button>
         <button>Pizzas</button>
@@ -35,10 +35,10 @@ const NomNomPage = () => {
         <button>Fish & Sea food</button>
         <button>Side dish</button>
         <button>Desserts</button>
-      </nav> */}
+      </nav>
 
       {/* Food Items */}
-      {/* <section className="p-4 grid grid-cols-3 gap-4">
+      <section className="p-4 grid grid-cols-3 gap-4">
         {[...Array(9)].map((_, index) => (
           <div key={index} className="bg-white text-black rounded-lg shadow-lg overflow-hidden">
             <img src="https://via.placeholder.com/300" alt="Food" className="w-full h-48 object-cover" />
@@ -52,7 +52,7 @@ const NomNomPage = () => {
             </div>
           </div>
         ))}
-      </section> */}
+      </section>
 
       {/* Footer */}
       <footer className="bg-black p-6 text-center text-gray-500">
