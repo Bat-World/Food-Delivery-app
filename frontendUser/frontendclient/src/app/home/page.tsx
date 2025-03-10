@@ -2,10 +2,36 @@
 import { useState } from "react";
 import { CircleUser, ShoppingCart } from "lucide-react";
 import Image from "next/image";
+import axios from "axios";
+import { useEffect } from "react";
 
 const Homepage = () => {
   const [hovered, setHovered] = useState(false);
+  interface Food {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+  }
 
+  const [foodsData, setFoodsData] = useState<Food[]>([]);
+
+
+  const fetchFoods = async () => {
+
+    try {
+      const response = await axios.get("http://localhost:9000/food");
+      console.log(response);
+      setFoodsData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFoods();
+  }, []);
   return (
     <div>
       <header className="flex justify-between items-center p-4 bg-black relative">
@@ -40,7 +66,34 @@ const Homepage = () => {
         width={400}
         height={100}
       />
-      <div className="w-full h-[80vw] bg-white"></div>
+      <div className="w-full h-[80vw] bg-white">
+        <div className="flex flex-wrap justify-center gap-6">
+        {foodsData.length === 0 ? (
+          <p className="text-lg text-center text-gray-600">Loading...</p>
+        ) : (
+          foodsData.map((food) => (
+            <div
+              key={food.id}
+              className="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden"
+            >
+              <img
+                src={food.image || "https://via.placeholder.com/400x300"}
+                alt={food.name}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-6">
+                <h2 className="text-2xl font-semibold text-gray-800">{food.name}</h2>
+                <p className="text-gray-600 mt-2">{food.description}</p>
+                <div className="flex justify-between items-center mt-4">
+                  <p className="text-xl font-semibold text-gray-900">${food.price}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+        </div>
+     
+      </div>
       <footer className="bg-black p-6 text-center text-gray-500">
         <p>© 2025 NomNom LLC</p>
       </footer>
