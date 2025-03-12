@@ -1,13 +1,12 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 export const foodOrderItemSchema = new Schema(
   {
-    food: { type: Schema.Types.ObjectId, ref: 'Food', required: true }, 
-    quantity: { type: Number, required: true }, 
+    food: { type: Schema.Types.ObjectId, ref: "Food", required: true },
+    quantity: { type: Number, required: true },
   },
   {
-    _id: false
+    _id: false,
   }
 );
-

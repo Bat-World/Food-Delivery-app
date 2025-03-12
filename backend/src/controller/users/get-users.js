@@ -1,16 +1,23 @@
 import { userModel } from "../../models/user.scheme.js";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import dotenv, { populate } from "dotenv";
 
 dotenv.config();
 
 const secretKey = process.env.SECRET_KEY;
-console.log(secretKey);
 
 export const getUser = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const user = await userModel.findById(userId).populate("orderedFoods");
+    const userId = req.user._id;
+    const user = await userModel
+      .findById(userId)
+      .populate([
+        "orderedFoods",
+        {
+          path: "orderedFoods",
+          populate: { path: "foodOrderItems", populate: "food" },
+        },
+      ]);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -22,20 +29,20 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const getUserByToken = async (req, res) => {
-  try {
-    const { authorization } = req.headers;
-    const token = authorization.split(" ")[1];
+// export const getUserByToken = async (req, res) => {
+//   try {
+//     const { authorization } = req.headers;
+//     const token = authorization.split(" ")[1];
 
-    const decoded = jwt.verify(token, secretKey);
-    console.log(decoded);
+//     const decoded = jwt.verify(token, secretKey);
+//     // console.log(decoded);
 
-    if (!decoded) {
-      return res.status(404).json({ message: "User not found" });
-    }
+//     if (!decoded) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
 
-    res.json(decoded.user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+//     res.json(decoded.user);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };

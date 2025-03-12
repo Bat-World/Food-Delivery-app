@@ -24,7 +24,7 @@ app.use('/user', userRouter);
 app.use('/food', foodRouter);
 app.use('/login', loginRouter);
 
-// Start the server
+
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
