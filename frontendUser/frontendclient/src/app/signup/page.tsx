@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
+import { sendRequest } from "@/lib/send-request";
 import { useRouter } from "next/navigation";
 
 
@@ -25,7 +25,7 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:9000/user/signup", {
+      const response = await sendRequest.post("/user/signup", {
         email,
         password,
       });

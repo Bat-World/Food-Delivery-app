@@ -6,12 +6,16 @@ import { createOrder } from "../controller/orders/create-order.js";
 import getOderById from "../controller/orders/get-order.js";
 import getCategories from "../controller/catergories/get-categroy.js";
 import { getAllOrders } from "../controller/orders/get-order.js";
+import { updateFood } from "../controller/foods/update-food.js";
+import { Authorization } from "../middleware/authorization.js";
+
 export const foodRouter = Router();
 
-foodRouter.post("/", createFood);
+foodRouter.post("/", Authorization, createFood);
 foodRouter.get("/", getAllFood);
 foodRouter.post("/category", createCategory);
 foodRouter.post("/order", createOrder);
 foodRouter.get("/order/:id", getOderById);
-foodRouter.get("/category",  getCategories)
+foodRouter.get("/category", getCategories);
 foodRouter.get("/orders", getAllOrders);
+foodRouter.put("/update/:id", updateFood);

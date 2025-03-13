@@ -1,17 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { CircleUser, ShoppingCart, X } from "lucide-react";
+
 import Image from "next/image";
-import axios from "axios";
 import { Plus } from "lucide-react";
 import { XCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { sendRequest } from "@/lib/send-request";
+import { CircleUser, ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+type FoodCategory = {
+  _id: string;
+  categoryName: string;
+};
 
 const Homepage = () => {
   const [hovered, setHovered] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [foodsData, setFoodsData] = useState<Food[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<FoodCategory[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [cart, setCart] = useState<Food[]>([]);
   const [cartNotification, setCartNotification] = useState<string | null>(null);
@@ -22,6 +29,8 @@ const Homepage = () => {
   const [showOrders, setShowOrders] = useState(false);
   const [showInMyBag, setShowInMyBag] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
+  const [filteredFoods, setFilteredFoods] = useState<Food[]>([]);
+const {push} = useRouter();
 
   interface Food {
     _id: string;
@@ -35,12 +44,11 @@ const Homepage = () => {
 
   const fetchFoods = async () => {
     try {
-      const categoryResponse = await axios.get(
-        "http://localhost:9000/food/category"
-      );
-      const foodsResponse = await axios.get("http://localhost:9000/food");
+      const categoryResponse = await sendRequest.get("/food/category");
+      const foodsResponse = await sendRequest.get("/food");
       setCategories(categoryResponse.data);
       setFoodsData(foodsResponse.data);
+      setFilteredFoods(foodsResponse.data);
     } catch (error) {
       console.error(error);
     }
@@ -50,7 +58,7 @@ const Homepage = () => {
   const createOrder = async () => {
     const token = localStorage.getItem("auth_token");
     try {
-      const { data: user } = await axios.get("http://localhost:9000/user", {
+      const { data: user } = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
 
@@ -68,10 +76,7 @@ const Homepage = () => {
 
       console.log("here goes order dataaa", orderData);
 
-      const response = await axios.post(
-        "http://localhost:9000/food/order",
-        orderData
-      );
+      const response = await sendRequest.post("/food/order", orderData);
 
       if (response.status === 201) {
         alert("Order created successfully");
@@ -88,7 +93,7 @@ const Homepage = () => {
     const token = localStorage.getItem("auth_token");
 
     try {
-      const { data: user } = await axios.get("http://localhost:9000/user", {
+      const { data: user } = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
       setOrders(user.orderedFoods);
@@ -113,21 +118,19 @@ const Homepage = () => {
     setTimeout(() => setCartNotification(null), 3000);
   };
 
-  const filteredFoods = selectedCategory
-    ? foodsData.filter((food) => food.category === selectedCategory)
-    : foodsData;
-
   useEffect(() => {
     if (selectedFood) {
       setTotalPrice(selectedFood.price * quantity);
     }
-  }, [quantity, selectedFood]);
-
+    const filteredFoodsByCategory = selectedCategory
+      ? foodsData.filter((food) => food.category === selectedCategory)
+      : foodsData;
+    setFilteredFoods(filteredFoodsByCategory);
+  }, [quantity, selectedFood, selectedCategory]);
 
   useEffect(() => {
     fetchFoods();
   }, []);
-  
 
   return (
     <div>
@@ -139,7 +142,7 @@ const Homepage = () => {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >
-            <CircleUser className="text-white cursor-pointer" />
+            <CircleUser className="text-white cursor-pointer" onClick={() => push('/profile')}/>
             <div
               className={`absolute right-0 top-10 w-48 p-4 bg-white rounded-lg shadow-lg transition-all duration-300 ease-in-out 
                 ${
@@ -266,74 +269,72 @@ const Homepage = () => {
             )}
 
             {/* "Orders" Section */}
-            {/* "Orders" Section */}
-{showOrders && (
-  <div className="max-h-[60vh] overflow-y-auto">
-    <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-      Your Orders
-    </h2>
-    {orders.length === 0 ? (
-      <p className="text-lg text-center text-gray-600">
-        No orders yet.
-      </p>
-    ) : (
-      <div>
-        {orders.map((order) => (
-          <div
-            key={order._id}
-            className="mb-6 p-4 border rounded-lg"
-          >
-            <h3 className="text-lg font-semibold text-gray-800">
-              {order.foodOrderItems
-                .map((item) => item.food.name)
-                .join(", ")}
-            </h3>
-
-            <p className="text-gray-600">
-              Total Price: ${order.totalPrice}
-            </p>
-            <p className="text-gray-600">Status: {order.status}</p>
-            <p className="text-gray-500 text-sm">
-              Ordered on:{" "}
-              {new Date(order.createdAt).toLocaleString()}
-            </p>
-
-            <div className="mt-3">
-              {order.foodOrderItems.map((food, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center mb-2"
-                >
+            {showOrders && (
+              <div className="max-h-[60vh] overflow-y-auto">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                  Your Orders
+                </h2>
+                {orders.length === 0 ? (
+                  <p className="text-lg text-center text-gray-600">
+                    No orders yet.
+                  </p>
+                ) : (
                   <div>
-                    <h4 className="text-md font-semibold">
-                      {food.name}
-                    </h4>
+                    {orders.map((order) => (
+                      <div
+                        key={order._id}
+                        className="mb-6 p-4 border rounded-lg"
+                      >
+                        <h3 className="text-lg font-semibold text-gray-800">
+                          {order.foodOrderItems
+                            .map((item) => item.food.name)
+                            .join(", ")}
+                        </h3>
 
-                    <p className="text-gray-500">
-                      Quantity:
-                      {order.foodOrderItems
-                        .map((item) => item.quantity)
-                        .join(", ")}
-                    </p>
+                        <p className="text-gray-600">
+                          Total Price: ${order.totalPrice}
+                        </p>
+                        <p className="text-gray-600">Status: {order.status}</p>
+                        <p className="text-gray-500 text-sm">
+                          Ordered on:{" "}
+                          {new Date(order.createdAt).toLocaleString()}
+                        </p>
+
+                        <div className="mt-3">
+                          {order.foodOrderItems.map((food, index) => (
+                            <div
+                              key={index}
+                              className="flex justify-between items-center mb-2"
+                            >
+                              <div>
+                                <h4 className="text-md font-semibold">
+                                  {food.name}
+                                </h4>
+
+                                <p className="text-gray-500">
+                                  Quantity:
+                                  {order.foodOrderItems
+                                    .map((item) => item.quantity)
+                                    .join(", ")}
+                                </p>
+                              </div>
+                              <img
+                                src={
+                                  food.image ||
+                                  "https://via.placeholder.com/100x100"
+                                }
+                                alt={food.name}
+                                className="w-12 h-12 object-cover rounded-md"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <img
-                    src={
-                      food.image ||
-                      "https://via.placeholder.com/100x100"
-                    }
-                    alt={food.name}
-                    className="w-12 h-12 object-cover rounded-md"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-)}
-
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -410,10 +411,12 @@ const Homepage = () => {
         >
           All
         </button>
-        {categories.map((category) => (
+        {categories?.map((category) => (
           <button
             key={category._id}
-            onClick={() => setSelectedCategory(category.categoryName)}
+            onClick={() => {
+              setSelectedCategory(category._id);
+            }}
             className="bg-gray-500 text-white py-2 px-4 rounded-lg"
           >
             {category.categoryName}
@@ -427,7 +430,7 @@ const Homepage = () => {
           {filteredFoods.length === 0 ? (
             <p className="text-lg text-center text-gray-600">Loading...</p>
           ) : (
-            filteredFoods.map((food) => (
+            filteredFoods?.map((food) => (
               <div
                 key={food._id}
                 className="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden relative"

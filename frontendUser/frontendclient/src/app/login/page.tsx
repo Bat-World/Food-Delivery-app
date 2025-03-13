@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-
-
+import { sendRequest } from "@/lib/send-request";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +16,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:9000/login", {
+      const response = await sendRequest.post("/login", {
         email: email,
         password,
       });
@@ -39,14 +37,18 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-md p-8 space-y-4 rounded-xl shadow-lg bg-white">
-        <h2 className="text-3xl font-bold text-center text-gray-800">Welcome Back!</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800">
+          Welcome Back!
+        </h2>
         <p className="text-center text-gray-500">Login to continue</p>
 
         {error && <div className="text-red-500 text-center">{error}</div>}
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-gray-600">Email:</label>
+            <label htmlFor="email" className="block text-gray-600">
+              Email:
+            </label>
             <input
               type="email"
               id="email"
@@ -57,7 +59,9 @@ const Login = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-gray-600">Password:</label>
+            <label htmlFor="password" className="block text-gray-600">
+              Password:
+            </label>
             <input
               type="password"
               id="password"
@@ -81,7 +85,9 @@ const Login = () => {
           >
             Create Account
           </button>
-          <button onClick={() => router.push(`/passwordreset/`)}>Forget Password</button>
+          <button onClick={() => router.push(`/passwordreset/`)}>
+            Forget Password
+          </button>
         </form>
       </div>
     </div>

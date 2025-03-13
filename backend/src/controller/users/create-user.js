@@ -1,15 +1,12 @@
 import { userModel } from "../../models/user.scheme.js";
 import bcrypt from "bcryptjs";
 
-
 export const createUser = async (req, res) => {
   try {
     const { password, ...rest } = req.body;
 
     const salt = await bcrypt.genSalt(10);
-
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log("hashed password", hashedPassword);
 
     const newUser = await userModel.create({
       ...rest,
@@ -23,4 +20,9 @@ export const createUser = async (req, res) => {
       .status(500)
       .json({ message: "Error creating user", error: error.message });
   }
+};
+
+const checkData = (data) => {
+  if (data.email.length === 0) return false;
+  return true;
 };

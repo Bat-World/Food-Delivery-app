@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
+import { sendRequest } from "@/lib/send-request";
 import { useRouter } from "next/navigation";
 
 const PasswordReset = () => {
@@ -15,7 +15,7 @@ const PasswordReset = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:9000/passwordreset", { email });
+      const response = await sendRequest.post("/passwordreset", { email });
 
       if (response.status === 200) {
         setMessage("Password reset link sent! Check your email.");

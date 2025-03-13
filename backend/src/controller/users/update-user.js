@@ -5,13 +5,10 @@ export const updateUser = async (req, res) => {
   const { id } = req.params;
   const { role } = req.body;
 
-  // Ensure the role is provided and is either 'user' or 'admin'
   if (!role || !["user", "admin"].includes(role)) {
-    return res
-      .status(400)
-      .json({
-        message: "Invalid role provided. It must be 'user' or 'admin'.",
-      });
+    return res.status(400).json({
+      message: "Invalid role provided. It must be 'user' or 'admin'.",
+    });
   }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -31,12 +28,10 @@ export const updateUser = async (req, res) => {
 
     const userWithoutPassword = updatedUser.toObject();
     delete userWithoutPassword.password;
-    return res
-      .status(200)
-      .json({
-        message: "User role updated successfully",
-        user: userWithoutPassword,
-      });
+    return res.status(200).json({
+      message: "User role updated successfully",
+      user: userWithoutPassword,
+    });
   } catch (err) {
     return res
       .status(500)

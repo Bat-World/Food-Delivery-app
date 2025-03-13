@@ -9,15 +9,13 @@ const secretKey = process.env.SECRET_KEY;
 export const getUser = async (req, res) => {
   try {
     const userId = req.user._id;
-    const user = await userModel
-      .findById(userId)
-      .populate([
-        "orderedFoods",
-        {
-          path: "orderedFoods",
-          populate: { path: "foodOrderItems", populate: "food" },
-        },
-      ]);
+    const user = await userModel.findById(userId).populate([
+      "orderedFoods",
+      {
+        path: "orderedFoods",
+        populate: { path: "foodOrderItems", populate: "food" },
+      },
+    ]);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -25,7 +23,7 @@ export const getUser = async (req, res) => {
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 

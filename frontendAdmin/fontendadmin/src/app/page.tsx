@@ -1,6 +1,7 @@
 "use client";
-import axios from "axios";
-import { useEffect, useState } from "react";
+
+import { sendRequest } from "@/lib/send-request";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const AdminPage = () => {
   const [foodsData, setFoodsData] = useState([]);
@@ -17,7 +18,7 @@ const AdminPage = () => {
 
   const fetchFoods = async () => {
     try {
-      const response = await axios.get("http://localhost:9000/food");
+      const response = await sendRequest.get("/food");
       setFoodsData(response.data);
     } catch (error) {
       console.error(error);
@@ -26,7 +27,7 @@ const AdminPage = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get("http://localhost:9000/food/orders");
+      const response = await sendRequest.get("/food/orders");
       setOrdersData(response.data);
     } catch (error) {
       console.error(error);
@@ -38,7 +39,7 @@ const AdminPage = () => {
     fetchOrders();
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewFood((prevFood) => ({
       ...prevFood,
@@ -49,7 +50,18 @@ const AdminPage = () => {
   const handleAddFood = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:9000/food", newFood);
+      const token = localStorage.getItem("auth_token");
+      console.log(token);    
+      const response = await sendRequest.post(
+        "/food", 
+        newFood,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    
       setFoodsData((prevFoods) => [...prevFoods, response.data]);
       setNewFood({
         name: "",
@@ -61,6 +73,7 @@ const AdminPage = () => {
     } catch (error) {
       console.error("Error adding food:", error);
     }
+    
   };
 
   return (
@@ -239,9 +252,7 @@ const AdminPage = () => {
                   <p className="text-gray-600 mt-2">
                     Total Price: ${order.totalPrice}
                   </p>
-                  <p className="text-gray-600 mt-2">
-                    Status: {order.status}
-                  </p>
+                  <p className="text-gray-600 mt-2">Status: {order.status}</p>
                   {order.user && (
                     <p className="text-gray-600 mt-2">
                       User Email: {order.user.email}
