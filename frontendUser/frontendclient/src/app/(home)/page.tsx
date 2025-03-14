@@ -1,6 +1,5 @@
 "use client";
 
-
 import Image from "next/image";
 import { Plus } from "lucide-react";
 import { XCircle } from "lucide-react";
@@ -30,16 +29,26 @@ const Homepage = () => {
   const [showInMyBag, setShowInMyBag] = useState(false);
   const [orders, setOrders] = useState<any[]>([]);
   const [filteredFoods, setFilteredFoods] = useState<Food[]>([]);
-const {push} = useRouter();
+  const [userData, setUserData] = useState<UserData[]>([]);
+  const { push } = useRouter();
 
-  interface Food {
-    _id: string;
-    name: string;
-    description: string;
-    price: number;
-    image: string;
-    category: string;
-    quantity?: number;
+  interface UserData {
+    email: string;
+    role: string;
+    isVerified: boolean;
+    orderedFoods: {
+      _id: string;
+      status: string;
+      totalPrice: number;
+      foodOrderItems: {
+        food: {
+          name: string;
+          price: number;
+          image: string;
+        };
+        quantity: number;
+      }[];
+    }[];
   }
 
   const fetchFoods = async () => {
@@ -61,9 +70,6 @@ const {push} = useRouter();
       const { data: user } = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
-
-      console.log("userrrrrrr", user);
-
       const orderData = {
         totalPrice,
         user: user._id,
@@ -97,7 +103,7 @@ const {push} = useRouter();
         headers: { Authorization: "Bearer " + token },
       });
       setOrders(user.orderedFoods);
-      console.log("orders expecteddd", orders);
+      setUserData(user);
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -130,6 +136,7 @@ const {push} = useRouter();
 
   useEffect(() => {
     fetchFoods();
+    fetchOrders();
   }, []);
 
   return (
@@ -142,7 +149,10 @@ const {push} = useRouter();
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >
-            <CircleUser className="text-white cursor-pointer" onClick={() => push('/profile')}/>
+            <CircleUser
+              className="text-white cursor-pointer"
+              onClick={() => push("/profile")}
+            />
             <div
               className={`absolute right-0 top-10 w-48 p-4 bg-white rounded-lg shadow-lg transition-all duration-300 ease-in-out 
                 ${
@@ -151,8 +161,7 @@ const {push} = useRouter();
                     : "opacity-0 -translate-y-2 pointer-events-none"
                 }`}
             >
-              <h4 className="font-bold text-gray-800">John Doe</h4>
-              <p className="text-sm text-gray-600">johndoe@example.com</p>
+              <p className="text-sm text-gray-600">{userData.email}</p>
               <button className="mt-2 w-full bg-blue-500 text-white py-1 rounded-md hover:bg-blue-600">
                 Logout
               </button>

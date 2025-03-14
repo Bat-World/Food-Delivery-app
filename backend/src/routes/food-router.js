@@ -8,14 +8,15 @@ import getCategories from "../controller/catergories/get-categroy.js";
 import { getAllOrders } from "../controller/orders/get-order.js";
 import { updateFood } from "../controller/foods/update-food.js";
 import { Authorization } from "../middleware/authorization.js";
+import { checkAdmin } from "../middleware/checkAdmin.js";
 
 export const foodRouter = Router();
 
-foodRouter.post("/", Authorization, createFood);
+foodRouter.post("/", Authorization, checkAdmin, createFood);
 foodRouter.get("/", getAllFood);
-foodRouter.post("/category", createCategory);
+foodRouter.post("/category", checkAdmin, createCategory);
 foodRouter.post("/order", createOrder);
 foodRouter.get("/order/:id", getOderById);
 foodRouter.get("/category", getCategories);
-foodRouter.get("/orders", getAllOrders);
-foodRouter.put("/update/:id", updateFood);
+foodRouter.get("/orders", checkAdmin, getAllOrders);
+foodRouter.put("/update/:id", checkAdmin,  updateFood);

@@ -22,9 +22,9 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        const { token } = response.data;
+        const { token, } = response.data;
         localStorage.setItem("auth_token", token);
-        router.push("/home");
+        router.push("/");
       }
     } catch (error) {
       console.error("Login error:", error);
