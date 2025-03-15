@@ -13,10 +13,12 @@ const app = express();
 const PORT = 9000;
 
 app.use(cors());
-
-
-connectToDatabase();
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+})
+connectToDatabase();
 
 app.use('/passwordreset', passwordRouter);
 
@@ -28,3 +30,5 @@ app.use('/login', loginRouter);
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
+
+export default app;

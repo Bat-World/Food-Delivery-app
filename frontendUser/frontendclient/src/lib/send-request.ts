@@ -1,3 +1,8 @@
 import axios from "axios";
 
-export const sendRequest = axios.create({ baseURL: "http://localhost:9000" });
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+console.log("backendUrl", backendUrl);
+
+
+export const sendRequest = axios.create({ baseURL: backendUrl });

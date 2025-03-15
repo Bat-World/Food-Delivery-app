@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import { sendRequest } from "@/lib/send-request";
 import { CircleUser, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { log } from "console";
+
 
 type FoodCategory = {
   _id: string;
@@ -102,6 +104,8 @@ const Homepage = () => {
       const { data: user } = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
+      console.log(user);
+      
       setOrders(user.orderedFoods);
       setUserData(user);
     } catch (error) {
@@ -128,9 +132,11 @@ const Homepage = () => {
     if (selectedFood) {
       setTotalPrice(selectedFood.price * quantity);
     }
+    
     const filteredFoodsByCategory = selectedCategory
       ? foodsData.filter((food) => food.category === selectedCategory)
       : foodsData;
+
     setFilteredFoods(filteredFoodsByCategory);
   }, [quantity, selectedFood, selectedCategory]);
 
