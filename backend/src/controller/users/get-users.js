@@ -1,5 +1,4 @@
 import { userModel } from "../../models/user.scheme.js";
-import jwt from "jsonwebtoken";
 import dotenv, { populate } from "dotenv";
 
 dotenv.config();
@@ -27,20 +26,4 @@ export const getUser = async (req, res) => {
   }
 };
 
-// export const getUserByToken = async (req, res) => {
-//   try {
-//     const { authorization } = req.headers;
-//     const token = authorization.split(" ")[1];
 
-//     const decoded = jwt.verify(token, secretKey);
-//     // console.log(decoded);
-
-//     if (!decoded) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     res.json(decoded.user);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };

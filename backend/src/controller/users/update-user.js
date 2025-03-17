@@ -38,3 +38,29 @@ export const updateUser = async (req, res) => {
       .json({ message: "Error updating user role", error: err });
   }
 };
+
+// passwordreset
+export const resetPassword = async (req, res) => {
+  const { userId } = req.params;
+  const { password } = req.body;
+
+  if (!userId || !password) {
+    return res.status(400).json({ message: "User ID and new password are required" });
+  }
+
+  try {
+    const user = await userModel.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.password = password; 
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successful!" });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "Error resetting password" });
+  }
+};

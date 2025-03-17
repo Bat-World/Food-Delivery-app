@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { sendRequest } from "@/lib/send-request";
 import { CircleUser, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { log } from "console";
+
 
 
 type FoodCategory = {

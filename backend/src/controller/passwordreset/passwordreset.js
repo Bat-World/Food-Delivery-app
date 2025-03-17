@@ -15,12 +15,13 @@ const transporter = nodemailer.createTransport({
 export const sendPasswordResetEmail = async (req, res) => {
   const { email } = req.body;
   const { id } = req.params;
-
+  
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
 
-  const resetLink = `http://localhost:9000/user/${id}`;
+  const resetLink = `http://localhost:3002/reset-password?userEmail=${Email}`;
+
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
