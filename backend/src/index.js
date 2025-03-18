@@ -2,9 +2,9 @@ import express from 'express';
 import dotenv from 'dotenv';  
 import cors from 'cors'; 
 import { userRouter } from './routes/user-router.js';
-import { connectToDatabase } from './database/index.js';
 import { foodRouter } from './routes/food-router.js';
 import { loginRouter } from './routes/login-router.js';
+import { connectToDatabase } from './database/index.js';
 import {passwordRouter} from './routes/password-routes.js';
 
 dotenv.config(); 
