@@ -16,6 +16,8 @@ const PasswordReset = () => {
 
     try {
       const response = await sendRequest.post("/passwordreset", { email });
+      console.log(response);
+      
 
       if (response.status === 200) {
         setMessage("Password reset link sent! Check your email.");
