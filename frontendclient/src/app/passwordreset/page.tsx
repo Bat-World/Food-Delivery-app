@@ -32,8 +32,9 @@ const PasswordReset = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="w-full max-w-md p-8 space-y-4 rounded-xl shadow-lg bg-white">
+    <div className="min-h-screen flex flex-row  justify-between bg-white">
+    <div className="w-[40vw] h-screen flex justify-center items-center">
+      <div className=" max-w-md p-8 space-y-4 rounded-xl shadow-lg bg-white">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Reset Password
         </h2>
@@ -66,7 +67,13 @@ const PasswordReset = () => {
           </button>
         </form>
       </div>
-    </div>
+      </div>
+
+<img
+  src="https://images.unsplash.com/photo-1607273685680-6bd976c5a5ce?q=80&w=4740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  className="w-[60vw] h-screen object-cover"
+/>
+</div>
   );
 };
 

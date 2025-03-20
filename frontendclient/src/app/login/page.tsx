@@ -22,7 +22,7 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        const { token, } = response.data;
+        const { token } = response.data;
         localStorage.setItem("auth_token", token);
         router.push("/");
       }
@@ -35,61 +35,68 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="w-full max-w-md p-8 space-y-4 rounded-xl shadow-lg bg-white">
-        <h2 className="text-3xl font-bold text-center text-gray-800">
-          Welcome Back!
-        </h2>
-        <p className="text-center text-gray-500">Login to continue</p>
+    <div className="min-h-screen flex flex-row  justify-between bg-white">
+      <div className="w-[40vw] h-screen flex justify-center items-center">
+        <div className=" max-w-md p-8 space-y-4 rounded-xl shadow-lg bg-white">
+          <h2 className="text-3xl font-bold text-center text-gray-800">
+            Welcome Back!
+          </h2>
+          <p className="text-center text-gray-500">Login to continue</p>
 
-        {error && <div className="text-red-500 text-center">{error}</div>}
+          {error && <div className="text-red-500 text-center">{error}</div>}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-gray-600">
-              Email:
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-gray-600">
-              Password:
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-          >
-            {loading ? "Logging In..." : "Log In"}
-          </button>
-          <button
-            type="button"
-            className="w-full py-2 bg-gray-100 text-blue-500 rounded-lg hover:bg-gray-200 transition duration-300"
-            onClick={() => router.push(`/signup/`)}
-          >
-            Create Account
-          </button>
-          <button onClick={() => router.push(`/passwordreset/`)}>
-            Forget Password
-          </button>
-        </form>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-gray-600">
+                Email:
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-gray-600">
+                Password:
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+            >
+              {loading ? "Logging In..." : "Log In"}
+            </button>
+            <button
+              type="button"
+              className="w-full py-2 bg-gray-100 text-blue-500 rounded-lg hover:bg-gray-200 transition duration-300"
+              onClick={() => router.push(`/signup/`)}
+            >
+              Create Account
+            </button>
+            <button onClick={() => router.push(`/passwordreset/`)}>
+              Forget Password
+            </button>
+          </form>
+        </div>
       </div>
+
+      <img
+        src="https://images.unsplash.com/photo-1607273685680-6bd976c5a5ce?q=80&w=4740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        className="w-[60vw] h-screen object-cover "
+      />
     </div>
   );
 };

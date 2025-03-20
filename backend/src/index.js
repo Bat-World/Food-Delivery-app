@@ -21,7 +21,6 @@ app.get('/', (req, res) => {
 connectToDatabase();
 
 app.use('/passwordreset', passwordRouter);
-
 app.use('/user', userRouter);
 app.use('/food', foodRouter);
 app.use('/login', loginRouter);

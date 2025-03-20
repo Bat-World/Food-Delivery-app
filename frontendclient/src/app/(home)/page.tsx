@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "./_components/Navbar";
 import { Fish } from "lucide-react";
 import Order from "./_components/Order";
+import { getFoods } from "./_components/apiFunctions/getFoods";
 
 type FoodCategory = {
   _id: string;
@@ -53,6 +54,7 @@ const Homepage = () => {
     }[];
   }
 
+  // Fetch foods
   const fetchFoods = async () => {
     try {
       const categoryResponse = await sendRequest.get("/food/category");
@@ -138,7 +140,7 @@ const Homepage = () => {
       : foodsData;
 
     setFilteredFoods(filteredFoodsByCategory);
-  }, [quantity, selectedFood, selectedCategory]);
+  }, [quantity, selectedFood, selectedCategory, foodsData]);
 
   useEffect(() => {
     fetchFoods();
