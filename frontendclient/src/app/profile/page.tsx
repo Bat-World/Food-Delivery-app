@@ -28,7 +28,7 @@ const Profile = () => {
   const fetchUserData = async () => {
     const token = localStorage.getItem("auth_token");
     try {
-      const response = await sendRequest.get("user", {
+      const response = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
 

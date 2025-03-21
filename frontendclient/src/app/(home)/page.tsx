@@ -9,11 +9,20 @@ import { useRouter } from "next/navigation";
 import Navbar from "./_components/Navbar";
 import { Fish } from "lucide-react";
 import Order from "./_components/Order";
-import { getFoods } from "./_components/apiFunctions/getFoods";
 
 type FoodCategory = {
   _id: string;
   categoryName: string;
+};
+
+type Food = {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  image?: string;
+  category: string;
+  quantity?: number;
 };
 
 const Homepage = () => {
@@ -28,31 +37,9 @@ const Homepage = () => {
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const [showOrders, setShowOrders] = useState(false);
   const [showInMyBag, setShowInMyBag] = useState(false);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [filteredFoods, setFilteredFoods] = useState<Food[]>([]);
-  const [userData, setUserData] = useState<UserData[]>([]);
-  const { push } = useRouter();
 
-  interface UserData {
-    email: string;
-    role: string;
-    isVerified: boolean;
-    orderedFoods: {
-      _id: string;
-      status: string;
-      totalPrice: number;
-      foodOrderItems: {
-        food: {
-          name: string;
-          price: number;
-          image: string;
-        };
-        quantity: number;
-      }[];
-    }[];
-  }
+  const { push } = useRouter();
 
   // Fetch foods
   const fetchFoods = async () => {
@@ -61,66 +48,12 @@ const Homepage = () => {
       const foodsResponse = await sendRequest.get("/food");
       setCategories(categoryResponse.data);
       setFoodsData(foodsResponse.data);
-      setFilteredFoods(foodsResponse.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // create order
-  const createOrder = async () => {
-    const token = localStorage.getItem("auth_token");
-    try {
-      const { data: user } = await sendRequest.get("/user", {
-        headers: { Authorization: "Bearer " + token },
-      });
-      const orderData = {
-        totalPrice,
-        user: user._id,
-        status: "pending",
-        foodOrderItems: cart.map((item) => ({
-          food: item._id,
-          quantity: item.quantity,
-        })),
-      };
-
-      console.log("here goes order dataaa", orderData);
-
-      const response = await sendRequest.post("/food/order", orderData);
-
-      if (response.status === 201) {
-        alert("Order created successfully");
-        setCart([]);
-      }
-    } catch (error) {
-      console.error("Error creating order:", error);
-      alert("Failed to create order");
-    }
-  };
-
-  // Fetch orders for the logged-in user
-  const fetchOrders = async () => {
-    const token = localStorage.getItem("auth_token");
-
-    try {
-      const { data: user } = await sendRequest.get("/user", {
-        headers: { Authorization: "Bearer " + token },
-      });
-      console.log(user);
-
-      setOrders(user.orderedFoods);
-      setUserData(user);
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (showOrders) {
-      fetchOrders();
-    }
-  }, [showOrders]);
-
+  // Add food to cart
   const addToCart = (food: Food, quantity: number) => {
     const foodWithQuantity = { ...food, quantity };
     setCart([...cart, foodWithQuantity]);
@@ -139,64 +72,25 @@ const Homepage = () => {
       ? foodsData.filter((food) => food.category === selectedCategory)
       : foodsData;
 
-    setFilteredFoods(filteredFoodsByCategory);
+    setFoodsData(filteredFoodsByCategory);
   }, [quantity, selectedFood, selectedCategory, foodsData]);
 
   useEffect(() => {
     fetchFoods();
-    fetchOrders();
   }, []);
 
-
-
-
-const categoryEmojis: Record<string, React.ReactNode> = {
-  fastfoods: "🍔",
-  italian: "🍝",
-  salads: "🥗",
-  desserts: "🍰",
-  seafoods: <Fish />,
-};
-
-  
+  const categoryEmojis: Record<string, React.ReactNode> = {
+    fastfoods: "🍔",
+    italian: "🍝",
+    salads: "🥗",
+    desserts: "🍰",
+    seafoods: <Fish />,
+  };
 
   return (
     <div className="flex flex-row overflow-y-hidden">
       <Navbar />
       <div className="bg-black">
-        <header className="flex justify-between items-center p-4 bg-[rgb(33,25,34)]  relative">
-          <h1 className="text-2xl text-white"></h1>
-          <div className="flex space-x-4 relative">
-            <div
-              className="relative"
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
-            >
-              <CircleUser
-                className="text-white cursor-pointer"
-                onClick={() => push("/profile")}
-              />
-              <div
-                className={`absolute right-0 top-10 w-48 p-4 bg-white rounded-lg shadow-lg transition-all duration-300 ease-in-out 
-                ${
-                  hovered
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 -translate-y-2 pointer-events-none"
-                }`}
-              >
-                <p className="text-sm text-gray-600">{userData.email}</p>
-                <button className="mt-2 w-full bg-blue-500 text-white py-1 rounded-md hover:bg-blue-600">
-                  Logout
-                </button>
-              </div>
-            </div>
-            <ShoppingCart
-              className="text-white cursor-pointer"
-              onClick={() => setShowCart(!showCart)}
-            />
-          </div>
-        </header>
-
         {cartNotification && (
           <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white py-2 px-6 rounded-md">
             {cartNotification}
@@ -210,13 +104,10 @@ const categoryEmojis: Record<string, React.ReactNode> = {
                 onClick={() => setShowCart(false)}
                 className="cursor-pointer"
               />
-              {/* Tabs for "In My Bag" and "Orders" */}
-              <div className="flex justify-between mb-4">
+              {/* In My Bag Tab */}
+              <div className="mb-4">
                 <button
-                  onClick={() => {
-                    setShowInMyBag(true);
-                    setShowOrders(false);
-                  }}
+                  onClick={() => setShowInMyBag(true)}
                   className={`px-4 py-2 ${
                     showInMyBag
                       ? "bg-blue-500 text-white"
@@ -224,19 +115,6 @@ const categoryEmojis: Record<string, React.ReactNode> = {
                   } rounded-lg`}
                 >
                   In My Bag
-                </button>
-                <button
-                  onClick={() => {
-                    setShowOrders(true);
-                    setShowInMyBag(false);
-                  }}
-                  className={`px-4 py-2 ${
-                    showOrders
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-800"
-                  } rounded-lg`}
-                >
-                  Orders
                 </button>
               </div>
 
@@ -277,86 +155,7 @@ const categoryEmojis: Record<string, React.ReactNode> = {
                         >
                           Close Cart
                         </button>
-                        <button
-                          onClick={() => {
-                            createOrder();
-                            setShowCart(false);
-                          }}
-                          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
-                        >
-                          Submit Order
-                        </button>
                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* "Orders" Section */}
-              {showOrders && (
-                <div className="max-h-[60vh] overflow-y-auto">
-                  <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                    Your Orders
-                  </h2>
-                  {orders.length === 0 ? (
-                    <p className="text-lg text-center text-gray-600">
-                      No orders yet.
-                    </p>
-                  ) : (
-                    <div>
-                      {orders.map((order) => (
-                        <div
-                          key={order._id}
-                          className="mb-6 p-4 border rounded-lg"
-                        >
-                          <h3 className="text-lg font-semibold text-gray-800">
-                            {order.foodOrderItems
-                              .map((item) => item.food.name)
-                              .join(", ")}
-                          </h3>
-
-                          <p className="text-gray-600">
-                            Total Price: ${order.totalPrice}
-                          </p>
-                          <p className="text-gray-600">
-                            Status: {order.status}
-                          </p>
-                          <p className="text-gray-500 text-sm">
-                            Ordered on:{" "}
-                            {new Date(order.createdAt).toLocaleString()}
-                          </p>
-
-                          <div className="mt-3">
-                            {order.foodOrderItems.map((food, index) => (
-                              <div
-                                key={index}
-                                className="flex justify-between items-center mb-2"
-                              >
-                                <div>
-                                  <h4 className="text-md font-semibold">
-                                    {food.name}
-                                  </h4>
-
-                                  <p className="text-gray-500">
-                                    Quantity:
-                                    {order.foodOrderItems
-                                      .map((item) => item.quantity)
-                                      .join(", ")}
-                                  </p>
-                                </div>
-                                <img
-                                  src={
-                                    food.image ||
-                                    "https://via.placeholder.com/100x100"
-                                  }
-                                  alt={food.name}
-                                  className="w-12 h-12 object-cover rounded-md"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
                     </div>
                   )}
                 </div>
@@ -364,6 +163,7 @@ const categoryEmojis: Record<string, React.ReactNode> = {
             </div>
           </div>
         )}
+
         {showFoodModal && selectedFood && (
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -432,7 +232,6 @@ const categoryEmojis: Record<string, React.ReactNode> = {
         )}
 
         {/* Categories Section */}
-
         <div className="flex justify-center space-x-4 mt-10">
           <button
             onClick={() => setSelectedCategory(null)}
@@ -447,31 +246,33 @@ const categoryEmojis: Record<string, React.ReactNode> = {
               className="bg-[rgb(33,25,34)] text-white py-2 px-4 rounded-lg flex items-center space-x-2"
             >
               <span>
-              <span>{categoryEmojis[category.categoryName.toLowerCase()] || "📌"}</span>
-
+                <span>
+                  {categoryEmojis[category.categoryName.toLowerCase()] || "📌"}
+                </span>
               </span>
-              <span className="font-semibold text-lg">{category.categoryName}</span>
+              <span className="font-semibold text-lg">
+                {category.categoryName}
+              </span>
             </button>
           ))}
         </div>
 
         {/* Foods Section */}
         <div className="w-full h-[80vw] mt-20 flex flex-col gap-20 px-10 rounded-t-[30%]">
-
           <div className="flex flex-wrap justify-center gap-6">
-            {filteredFoods.length === 0 ? (
+            {foodsData.length === 0 ? (
               <p className="text-lg text-center text-gray-600">Loading...</p>
             ) : (
-              filteredFoods?.map((food) => (
+              foodsData.map((food) => (
                 <div
                   key={food._id}
                   className="max-w-sm w-full bg-[rgb(33,25,34)] shadow-lg rounded-lg overflow-hidden relative"
                 >
                   <div className="w-full h-48 relative">
-                  <img
-                    src={food.image || "https://via.placeholder.com/400x400"}
-                    alt={food.name}
-                    className="w-full h-48 object-cover px-4 pt-4 rounded-[20px]"
+                    <img
+                      src={food.image || "https://via.placeholder.com/400x400"}
+                      alt={food.name}
+                      className="w-full h-48 object-cover px-4 pt-4 rounded-[20px]"
                     />
                   </div>
                   <div className="absolute right-6 bottom-20 bg-black w-8 h-8 rounded-full flex items-center justify-center cursor-pointer">
@@ -500,7 +301,7 @@ const categoryEmojis: Record<string, React.ReactNode> = {
           </div>
         </div>
       </div>
-      <Order/>
+      <Order cart={cart.map((item) => ({ ...item, quantity: item.quantity || 1 }))} />
     </div>
   );
 };

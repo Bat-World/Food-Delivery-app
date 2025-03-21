@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 import { userModel } from "../../models/user.scheme.js";
 
 export const resetPassword = async (req, res) => {
-  const { email } = req.query; 
+  const { email } = req.query;
   const { password } = req.body;
 
   if (!email || !password) {
@@ -16,8 +16,12 @@ export const resetPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    user.password = password;
+    
+    user.password = hashedPassword;
     await user.save();
 
     res.status(200).json({ message: "Password reset successful!" });
@@ -26,4 +30,3 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Error resetting password" });
   }
 };
-
