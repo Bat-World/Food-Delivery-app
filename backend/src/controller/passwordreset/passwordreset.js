@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import jwt from 'jsonwebtoken'
 
 
 dotenv.config();
@@ -13,21 +14,21 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendPasswordResetEmail = async (req, res) => {
-  const { email } = req.body;
+  const { email, resetPassword } = req.body;
 
-  
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
 
-  const resetLink = `http://localhost:3002/?email=${email}`;
+  const token = jwt.sign({ email, resetPassword }, "Email-verify-secret-djisojasoiijd")
 
+  const resetLink = `http://localhost:9000/passwordreset/verify?token=${token}}`;
 
   const mailOptions = {
     from: `" Food" ${process.env.EMAIL_USER}`,
     to: email,
     subject: "Password Reset Request",
-    html: `<p>Click this link to reset your password: ${resetLink}</p>`, 
+    html: `<p>Click this link to reset your password: ${resetLink}</p>`,
   };
 
   try {
