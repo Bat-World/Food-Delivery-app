@@ -10,5 +10,4 @@ export const userRouter = Router();
 userRouter.delete("/", Authorization, deleteUser);
 userRouter.get("/", Authorization, getUser);
 userRouter.post("/signup", createUser);
-// userRouter.put("/:id", updateUser);
 userRouter.put("/reset-password", resetPassword);

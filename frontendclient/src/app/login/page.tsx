@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sendRequest } from "@/lib/send-request";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ const Login = () => {
         email: email,
         password,
       });
-
+    
       if (response.status === 200) {
         const { token } = response.data;
         localStorage.setItem("auth_token", token);
@@ -28,10 +29,19 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("Invalid username or password.");
+      if (axios.isAxiosError(error)) {
+        if (error.code === 'ERR_NETWORK') {
+          setError("Network error. Please check your connection.");
+        } else {
+          setError("Invalid username or password.");
+        }
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
+    
   };
 
   return (

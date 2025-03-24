@@ -3,12 +3,10 @@
 import { Plus } from "lucide-react";
 import { XCircle } from "lucide-react";
 import { useState, useEffect } from "react";
-import { sendRequest } from "@/lib/send-request";
-import { CircleUser, ShoppingCart } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Navbar from "./_components/Navbar";
 import { Fish } from "lucide-react";
 import Order from "./_components/Order";
+import { sendRequest } from "@/lib/send-request";
 
 type FoodCategory = {
   _id: string;
@@ -26,7 +24,6 @@ type Food = {
 };
 
 const Homepage = () => {
-  const [hovered, setHovered] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [foodsData, setFoodsData] = useState<Food[]>([]);
   const [categories, setCategories] = useState<FoodCategory[]>([]);
@@ -39,7 +36,6 @@ const Homepage = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [showInMyBag, setShowInMyBag] = useState(false);
 
-  const { push } = useRouter();
 
   // Fetch foods
   const fetchFoods = async () => {
@@ -301,7 +297,9 @@ const Homepage = () => {
           </div>
         </div>
       </div>
-      <Order cart={cart.map((item) => ({ ...item, quantity: item.quantity || 1 }))} />
+
+<Order cart={cart.map((item) => ({ ...item, quantity: item.quantity || 1 }))} setCart={setCart} />
+
     </div>
   );
 };
