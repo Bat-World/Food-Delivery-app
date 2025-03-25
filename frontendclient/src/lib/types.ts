@@ -17,6 +17,7 @@ export type OrderType = {
   _id: string;
   totalPrice: number;
   status: string;
+  createdAt: string;
   foodOrderItems: {
     food: {
       name: string;
@@ -32,3 +33,4 @@ export type CartType = {
     quantity: number;
   } & Food;
 };
+

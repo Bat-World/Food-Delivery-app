@@ -5,7 +5,7 @@ import { userRouter } from './routes/user-router.js';
 import { foodRouter } from './routes/food-router.js';
 import { loginRouter } from './routes/login-router.js';
 import { connectToDatabase } from './database/index.js';
-import {passwordRouter} from './routes/password-routes.js';
+import { passwordRouter } from './routes/password-routes.js';
 
 dotenv.config(); 
 

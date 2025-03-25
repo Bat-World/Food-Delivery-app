@@ -16,14 +16,14 @@ const CATEGORIES_EMOJIS: Record<string, React.ReactNode> = {
 };
 
 export const Categories = () => {
-  const [_, setSelectedCategory] = useQueryState("categories", parseAsString);
+  const [, setSelectedCategory] = useQueryState("categories", parseAsString);
   const [categories, setCategories] = useState<FoodCategory[]>([]);
 
   const getCategories = async () => {
     try {
       const categoryResponse = await sendRequest.get("/food/category");
       setCategories(categoryResponse.data);
-    } catch (err) {
+    } catch {
       toast("Failed to fetch categories");
     }
   };

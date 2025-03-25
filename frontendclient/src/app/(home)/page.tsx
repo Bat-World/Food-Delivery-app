@@ -5,17 +5,21 @@ import { Foods } from "./_components/Foods";
 
 const Homepage = () => {
   return (
-    <div className="flex flex-row overflow-y-hidden">
+    <div className="flex flex-row h-screen">
       <Navbar />
-      <div className="bg-black">
-        {/* Categories Section */}
-        <Categories />
 
-        {/* Foods Section */}
-        <Foods />
+      <div className="bg-black w-full flex flex-col overflow-y-auto">
+        <div className="sticky top-0 z-10">
+          <Categories />
+        </div>
+        <div className="flex-grow overflow-y-auto mt-4">
+          <Foods />
+        </div>
       </div>
 
-      <Order />
+      <div className="flex-shrink-0 w-[300px]">
+        <Order />
+      </div>
     </div>
   );
 };

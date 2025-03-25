@@ -21,7 +21,7 @@ const Login = () => {
         email: email,
         password,
       });
-    
+
       if (response.status === 200) {
         const { token } = response.data;
         localStorage.setItem("auth_token", token);
@@ -30,7 +30,7 @@ const Login = () => {
     } catch (error) {
       console.error("Login error:", error);
       if (axios.isAxiosError(error)) {
-        if (error.code === 'ERR_NETWORK') {
+        if (error.code === "ERR_NETWORK") {
           setError("Network error. Please check your connection.");
         } else {
           setError("Invalid username or password.");
@@ -41,7 +41,6 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
-    
   };
 
   return (

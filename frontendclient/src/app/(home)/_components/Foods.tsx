@@ -9,7 +9,7 @@ import { FoodModal } from "./FoodModal";
 
 export const Foods = () => {
   const [selectedCategory] = useQueryState("categories", parseAsString);
-  const [_, setFoodId] = useQueryState("food", parseAsString);
+  const [, setFoodId] = useQueryState("food", parseAsString);
 
   const [foods, setFoods] = useState<Food[]>([]);
   const [filteredFoods, setFilteredFoods] = useState<Food[]>([]);
