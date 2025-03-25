@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroui/skeleton": "^2.2.10",
     "@radix-ui/react-toast": "^1.2.6",
     "axios": "^1.8.1",
     "class-variance-authority": "^0.7.1",

@@ -12,7 +12,7 @@ export const FoodModal = ({ foods }: FoodModalProps) => {
   const selectedFood = foods.find((food) => food._id === foodId);
 
   const [quantity, setQuantity] = useState<number>(1);
-  const totalPrice = quantity + selectedFood?.price!;
+  const totalPrice = quantity + (selectedFood?.price ?? 0);
 
   const addToCart = (food: Food, quantity: number) => {
     const getCart = JSON.parse(localStorage.getItem("cart") || "{}");

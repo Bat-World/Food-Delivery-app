@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import { userModel } from '../../models/user.scheme';
 
 export const verifyEmail = async (req, res) => {
     const { token } = req.query;
