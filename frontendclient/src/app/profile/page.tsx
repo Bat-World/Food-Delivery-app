@@ -1,32 +1,22 @@
 "use client";
 
 import { sendRequest } from "@/lib/send-request";
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { UserData } from "@/lib/types";
+
 
 const Profile = () => {
-  interface UserData {
-    email: string;
-    role: string;
-    isVerified: boolean;
-    orderedFoods: {
-      _id: string;
-      status: string;
-      totalPrice: number;
-      foodOrderItems: {
-        food: {
-          name: string;
-          price: number;
-          image: string;
-        };
-        quantity: number;
-      }[];
-    }[];
-  }
 
 
 
   const [userData, setUserData] = useState<UserData | null>(null);
+<<<<<<< HEAD
   const userLocation = localStorage.getItem("savedLocation");
+=======
+  const router = useRouter();
+>>>>>>> 185d824 (.)
 
   const fetchUserData = async () => {
     const token = localStorage.getItem("auth_token");
@@ -53,6 +43,7 @@ const Profile = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gray-50">
+      <ArrowLeft className="cursor-pointer" onClick={()=> router.push("/")}/>
       {/* Profile Header */}
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-gray-800">

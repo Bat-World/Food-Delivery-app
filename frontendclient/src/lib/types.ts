@@ -34,3 +34,23 @@ export type CartType = {
   } & Food;
 };
 
+
+export  interface UserData {
+  email: string;
+  role: string;
+  isVerified: boolean;
+  orderedFoods: {
+    _id: string;
+    status: string;
+    totalPrice: number;
+    foodOrderItems: {
+      food: {
+        name: string;
+        price: number;
+        image: string;
+      };
+      quantity: number;
+    }[];
+  }[];
+}
+
