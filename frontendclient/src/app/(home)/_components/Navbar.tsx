@@ -16,7 +16,7 @@ const Navbar = () => {
           height={100}
           className="mb-4"
         />
-        <p className="  text-white font-semibold text-xl">POSFood</p>
+        {/* <p className="  text-white font-semibold text-xl">POSFood</p> */}
       </div>
 
       <div className="h-[40vh] w-[80%] flex flex-col items-center justify-between gap-4 mt-20">
