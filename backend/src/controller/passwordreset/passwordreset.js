@@ -22,7 +22,7 @@ export const sendPasswordResetEmail = async (req, res) => {
 
   const token = jwt.sign({ email, resetPassword }, "Email-verify-secret-djisojasoiijd")
 
-  const resetLink = `http://localhost:9000/passwordreset/verify?token=${token}}`;
+  const resetLink = `https://food-delivery-bakcend.vercel.app/passwordreset/verify?token=${token}}`;
 
   const mailOptions = {
     from: `" Food" ${process.env.EMAIL_USER}`,

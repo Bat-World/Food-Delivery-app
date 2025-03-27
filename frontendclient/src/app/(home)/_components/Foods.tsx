@@ -53,9 +53,7 @@ export const Foods = () => {
                     <Skeleton className="rounded-lg h-full bg-gray-500" />
                   </div>
                   <div className="p-6">
-                    {/* Skeleton for title */}
                     <Skeleton className="h-6 bg-gray-500 mb-2 rounded-sm" />
-                    {/* Skeleton for price */}
                     <Skeleton className="h-6 bg-gray-500 rounded-sm" />
                   </div>
                 </div>

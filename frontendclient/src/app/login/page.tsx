@@ -95,7 +95,10 @@ const Login = () => {
             >
               Create Account
             </button>
-            <button onClick={() => router.push(`/passwordreset/`)}>
+            <button
+              onClick={() => router.push(`/passwordreset/`)}
+              className="w-full py-2  text-red-400 rounded-lg hover:text-red-500 transition duration-300 hover:scale-105 "
+            >
               Forget Password
             </button>
           </form>

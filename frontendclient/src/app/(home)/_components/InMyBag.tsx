@@ -9,18 +9,23 @@ interface InMyBagProps {
   setShowInMyBag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const InMyBag: React.FC<InMyBagProps> = ({setShowInMyBag }) => {
-
-    const [cart, setCart] = useState<CartType>(() => {
-        if (typeof window !== "undefined")
-          return JSON.parse(localStorage.getItem("cart") || "{}");
-        return {};
-      });
-
+export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
+  const [cart, setCart] = useState<CartType>(() => {
+    if (typeof window !== "undefined")
+      return JSON.parse(localStorage.getItem("cart") || "{}");
+    return {};
+  });
 
   const placeOrder = async () => {
+    const Token = localStorage.getItem("auth_token");
+    if (!Token) {
+      alert("Please login to place an order.");
+      return;
+    }
     if (Object.keys(cart).length === 0) {
-      alert("Your cart is empty. Add items to the cart before placing an order.");
+      alert(
+        "Your cart is empty. Add items to the cart before placing an order."
+      );
       return;
     }
 

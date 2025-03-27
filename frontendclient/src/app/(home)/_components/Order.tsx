@@ -11,16 +11,16 @@ const Order = () => {
   const [showInMyBag, setShowInMyBag] = useState(false);
   const [orders, setOrders] = useState<OrderType[]>([]);
 
-
-  // Fetch orders for the logged-in user
   const fetchOrders = async () => {
     const token = localStorage.getItem("auth_token");
 
     try {
-      const { data: user } = await sendRequest.get("/user", {
+      const response = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
-      setOrders(user.orderedFoods);
+      setOrders(response.data.orderedFoods);
+      console.log(response.data.orderedFoods);
+      
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -44,7 +44,7 @@ const Order = () => {
             showInMyBag ? "bg-red-400 text-white" : "bg-gray-700 text-white"
           } hover:bg-red-400`}
         >
-          In My Bag
+          Cart
         </button>
         <button
           onClick={() => {

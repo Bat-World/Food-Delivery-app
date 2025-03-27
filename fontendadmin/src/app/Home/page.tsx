@@ -2,6 +2,7 @@
 
 import { sendRequest } from "@/lib/send-request";
 import { ChangeEvent, useEffect, useState } from "react";
+import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 const AdminPage = () => {
   const [foodsData, setFoodsData] = useState([]);
@@ -16,8 +17,6 @@ const AdminPage = () => {
     category: "",
   });
 
- 
-
   const fetchFoods = async () => {
     try {
       const response = await sendRequest.get("/food");
@@ -29,11 +28,9 @@ const AdminPage = () => {
 
   const fetchOrders = async () => {
     const token = localStorage.getItem("auth_token");
-    console.log(token);
-    
     try {
       const response = await sendRequest.get("/food/orders", {
-        headers: { Authorization: `Bearer ${token}` }, 
+        headers: { Authorization: `Bearer ${token}` },
       });
       setOrdersData(response.data);
     } catch (error) {
@@ -46,8 +43,8 @@ const AdminPage = () => {
     fetchOrders();
   }, []);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setNewFood((prevFood) => ({
       ...prevFood,
       [name]: value,
@@ -58,17 +55,13 @@ const AdminPage = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("auth_token");
-      console.log(token);    
-      const response = await sendRequest.post(
-        "/food", 
-        newFood,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    
+      console.log(token);
+      const response = await sendRequest.post("/food", newFood, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       setFoodsData((prevFoods) => [...prevFoods, response.data]);
       setNewFood({
         name: "",
@@ -80,7 +73,6 @@ const AdminPage = () => {
     } catch (error) {
       console.error("Error adding food:", error);
     }
-    
   };
 
   return (
@@ -170,7 +162,32 @@ const AdminPage = () => {
                 required
               ></textarea>
             </div>
-            <div className="mb-4">
+            <CldUploadWidget
+              uploadPreset="ml_default"
+              onSuccess={(res) => {      
+                setNewFood((prev) => { console.log(prev);
+                 return {
+                  ...prev,
+                  image: res.info!.secure_url ,
+                }});
+              }}
+              // onError={(err) => {
+              //   console.error(err);
+              // }
+              // }
+            >
+              {({ open }) => {
+                return (
+                  <button
+                    className="text-white bg-black"
+                    onClick={() => open()}
+                  >
+                    Upload Food Image
+                  </button>
+                );
+              }}
+            </CldUploadWidget>
+            {/* <div className="mb-4">
               <label htmlFor="image" className="block text-gray-700">
                 Image URL
               </label>
@@ -183,7 +200,7 @@ const AdminPage = () => {
                 className="w-full p-2 border border-gray-300 rounded-md"
                 required
               />
-            </div>
+            </div> */}
             <div className="mb-4">
               <label htmlFor="category" className="block text-gray-700">
                 Category

@@ -8,7 +8,7 @@ const Homepage = () => {
     <div className="flex flex-row h-screen">
       <Navbar />
 
-      <div className="bg-black w-full flex flex-col overflow-y-auto">
+      <div style={{ backgroundColor: '#0F0F0F' }} className="w-full flex flex-col overflow-y-auto">
         <div className="sticky top-0 z-10">
           <Categories />
         </div>

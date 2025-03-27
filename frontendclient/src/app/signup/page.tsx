@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { sendRequest } from "@/lib/send-request";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ const SignUp = () => {
       });
 
       if (response.status === 201) {
+        toast("Signed up successfully, Please login", { type: "success" });
         router.push("/login");
       }
     } catch (error) {
