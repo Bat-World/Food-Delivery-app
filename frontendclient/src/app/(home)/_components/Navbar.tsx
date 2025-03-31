@@ -1,9 +1,10 @@
 "use client";
 
-import { House, User, LogOut } from "lucide-react";
+import { House, User, LogOut, MapPinned } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+
 
 const Navbar = () => {
   const { push } = useRouter();
@@ -27,7 +28,6 @@ const Navbar = () => {
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
     if (token) {
-      toast("welcome back", { type: "success" });
     } else {
       toast("Please login to order food", { type: "info" });
     }
@@ -57,6 +57,13 @@ const Navbar = () => {
           <User
             className="text-white cursor-pointer w-6 h-6 hover:text-red-400 font-semibold hover:scale-110 transition-transform"
             onClick={() => push("/profile")}
+          />
+        </div>
+        <div className="w-[80%] h-[80px] bg-transparent flex items-center justify-center rounded-lg">
+          <MapPinned
+            className="text-white cursor-pointer w-6 h-6 hover:text-red-400 font-semibold hover:scale-110 transition-transform"
+            onClick={() => push("/location")}
+            
           />
         </div>
 

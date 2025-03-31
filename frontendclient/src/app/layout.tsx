@@ -3,6 +3,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import { TokenProvider } from "../hooks/TokenContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <TokenProvider>
         <NuqsAdapter>{children}</NuqsAdapter>
-        <ToastContainer />
+        <ToastContainer /></TokenProvider>
       </body>
     </html>
   );
