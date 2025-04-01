@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -11,54 +12,45 @@ const ulaanbaatarCoordinates = { lat: 47.8864, lng: 106.9057 };
 
 function MyMap() {
   const [location, setLocation] = useState(null);
-  const [address, setAddress] = useState(null);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
   const router = useRouter();
 
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey });
 
+  // Load the saved location from localStorage on component mount
   useEffect(() => {
     const savedLocation = localStorage.getItem("savedLocation");
     if (savedLocation) {
       try {
         setLocation(JSON.parse(savedLocation));
-        setAddress(localStorage.getItem("savedAddress") || "");
       } catch (error) {
         console.error("Error parsing saved location:", error);
       }
     }
   }, []);
 
+  // Save the location to localStorage when it's updated
   useEffect(() => {
-    if (location && address) {
+    if (location) {
       localStorage.setItem("savedLocation", JSON.stringify(location));
-      localStorage.setItem("savedAddress", address);
       toast.success("Location saved successfully");
     }
-  }, [location, address]);
+  }, [location]);
 
+  // Handle map click to select location
   const handleMapClick = (e) => {
     if (!e.latLng) return;
     const newLocation = { lat: e.latLng.lat(), lng: e.latLng.lng() };
     setLocation(newLocation);
     setIsLocationSelected(true);
-
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ location: newLocation }, (results, status) => {
-      if (status === "OK" && results[0]) {
-        setAddress(results[0].formatted_address);
-      } else {
-        console.error("Geocode failed due to: " + status);
-      }
-    });
   };
 
+  // Confirm location and redirect to login page
   const handleConfirmLocation = () => {
-    if (location && address) {
+    if (location) {
       localStorage.setItem("savedLocation", JSON.stringify(location));
-      localStorage.setItem("savedAddress", address);
       toast.success("Location confirmed successfully");
-      router.push("/");
+      router.push("/"); // Redirect to login page
     }
   };
 
@@ -82,12 +74,6 @@ function MyMap() {
         >
           Confirm Location
         </button>
-      )}
-
-      {address && (
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-lg text-white">
-          <p>Selected Address: {address}</p>
-        </div>
       )}
     </div>
   );

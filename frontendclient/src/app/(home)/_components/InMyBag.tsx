@@ -4,6 +4,7 @@ import React from "react";
 import { useState } from "react";
 import { CartType } from "@/lib/types";
 import { sendRequest } from "@/lib/send-request";
+import { toast } from "react-toastify";
 
 interface InMyBagProps {
   setShowInMyBag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,27 +18,34 @@ export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
   });
 
   const placeOrder = async () => {
-    const Token = localStorage.getItem("auth_token");
-    if (!Token) {
-      alert("Please login to place an order.");
+    const token = localStorage.getItem("auth_token");
+    const location = localStorage.getItem("savedLocation");
+
+    if (!token) {
+      toast("Please login to place an order.", { type: "error" });
       return;
     }
+
+    if (!location) {
+      toast("Please select a location before placing an order.", {
+        type: "error",
+      });
+      return;
+    }
+
     if (Object.keys(cart).length === 0) {
-      alert(
-        "Your cart is empty. Add items to the cart before placing an order."
+      toast(
+        "Your cart is empty. Add items to the cart before placing an order.",
+        { type: "error" }
       );
       return;
     }
 
-    const token = localStorage.getItem("auth_token");
-
     try {
-      // Get user info
       const { data: user } = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
 
-      // Prepare order data
       const orderData = {
         totalPrice: Object.values(cart).reduce(
           (acc, item) => acc + item.price * item.quantity,
@@ -54,14 +62,14 @@ export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
       const response = await sendRequest.post("/food/order", orderData);
 
       if (response.status === 201) {
-        alert("Your order has been placed successfully!");
+        toast("Your order has been placed successfully!", { type: "success" });
         localStorage.setItem("cart", JSON.stringify({}));
         setCart({});
         setShowInMyBag(false);
       }
     } catch (error) {
       console.error("Error placing the order:", error);
-      alert("Failed to place order. Please try again.");
+      toast("Failed to place order. Please try again.", { type: "error" });
     }
   };
 

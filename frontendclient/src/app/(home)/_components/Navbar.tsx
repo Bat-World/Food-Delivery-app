@@ -3,32 +3,22 @@
 import { House, User, LogOut, MapPinned } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import LogoutDialog from "../_utils/Confirmation";
 
 const Navbar = () => {
   const { push } = useRouter();
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("auth_token");
-
-  const handleLogout = () => {
-    const confirmed = window.confirm("Are you sure you want to logout?");
-    if (confirmed) {
-      localStorage.removeItem("auth_token");
-      push("/login");
-      toast("Logged out successfully", { type: "info" });
-    }
-  };
 
   const handleLogin = () => {
     push("/login");
   };
 
-
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
-    if (token) {
-    } else {
+    if (!token) {
       toast("Please login to order food", { type: "info" });
     }
   }, []);
@@ -43,7 +33,6 @@ const Navbar = () => {
           height={100}
           className="mb-4"
         />
-        
       </div>
 
       <div className="h-[40vh] w-[80%] flex flex-col items-center justify-between gap-4 mt-20">
@@ -63,7 +52,6 @@ const Navbar = () => {
           <MapPinned
             className="text-white cursor-pointer w-6 h-6 hover:text-red-400 font-semibold hover:scale-110 transition-transform"
             onClick={() => push("/location")}
-            
           />
         </div>
 
@@ -71,18 +59,22 @@ const Navbar = () => {
           {isLoggedIn ? (
             <LogOut
               className="text-white cursor-pointer w-6 h-6 hover:text-red-400 font-semibold hover:scale-110 transition-transform"
-              onClick={handleLogout}
+              onClick={() => setIsDialogOpen(true)}
             />
           ) : (
             <button
               className="text-white cursor-pointer w-6 h-6 hover:text-red-400 font-semibold hover:scale-110 transition-transform"
               onClick={handleLogin}
             >
-              Login 
+              Login
             </button>
           )}
         </div>
       </div>
+
+      {isDialogOpen && (
+        <LogoutDialog closeDialog={() => setIsDialogOpen(false)} />
+      )}
     </div>
   );
 };
