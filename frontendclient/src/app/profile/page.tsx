@@ -23,7 +23,10 @@ const Profile = () => {
     }[];
   }
 
+
+
   const [userData, setUserData] = useState<UserData | null>(null);
+  const userLocation = localStorage.getItem("savedLocation");
 
   const fetchUserData = async () => {
     const token = localStorage.getItem("auth_token");
@@ -59,12 +62,15 @@ const Profile = () => {
           <p className="text-xl text-gray-700">
             <strong>Email:</strong> {userData.email}
           </p>
-          <p className="text-xl text-gray-700">
+          {/* <p className="text-xl text-gray-700">
             <strong>Role:</strong> {userData.role}
           </p>
           <p className="text-xl text-gray-700">
             <strong>Status:</strong>{" "}
             {userData.isVerified ? "Verified" : "Not Verified"}
+          </p> */}
+          <p className="text-xl text-gray-700">
+            <strong>Address</strong> {userLocation}
           </p>
         </div>
       </div>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroui/skeleton": "^2.2.10",
+    "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.6",
     "@react-google-maps/api": "^2.20.6",
     "axios": "^1.8.1",
