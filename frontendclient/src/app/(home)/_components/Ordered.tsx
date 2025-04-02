@@ -1,54 +1,88 @@
-"use client";
+import React, { useState, useEffect } from "react";
+import { ShoppingCart } from "lucide-react";
+import { UserData } from "@/lib/types";
+import { sendRequest } from "@/lib/send-request";
 
-import React from "react";
-import { OrderType } from "@/lib/types";
+export const Orders = ({}) => {
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(false);
 
-interface OrdersProps {
-  orders: OrderType[];
-}
+  const fetchUserData = async () => {
+    const token = localStorage.getItem("auth_token");
+    try {
+      setLoading(true);
+      const response = await sendRequest.get("/user", {
+        headers: { Authorization: "Bearer " + token },
+      });
 
-export const Orders: React.FC<OrdersProps> = ({ orders }) => {
+      if (response.status === 200) {
+        setUserData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   return (
-    <div className="w-full max-h-[70vh] overflow-y-auto bg-gray-800 rounded-lg p-6 shadow-md">
+    <div  className="w-full max-h-[70vh] overflow-y-auto bg-[rgb(33,25,34)] rounded-lg p-6 shadow-md">
       <h2 className="text-2xl font-semibold text-white mb-6">Your Orders</h2>
-      {orders.length === 0 ? (
+      {loading ? (
+        <ShoppingCart className="animate-slide text-white" />
+      ) : userData?.orderedFoods.length === 0 ? (
         <p className="text-lg text-center text-gray-400">No orders yet.</p>
       ) : (
         <div>
-          {orders.map((order) => (
-            <div
-              key={order._id}
-              className="mb-6 p-4 bg-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all"
-            >
-              <h3 className="text-lg font-semibold text-white">
-                {order.foodOrderItems
-                  .map((item) => item.food.name)
-                  .join(", ")}
-              </h3>
-              <p className="text-gray-400">
-                Total Price: ${order.totalPrice.toFixed(2)}
-              </p>
-              <p className="text-gray-400">Status: {order.status}</p>
-              <p className="text-gray-500 text-sm">
-                Ordered on: {new Date(order.createdAt).toLocaleString()}
-              </p>
-
-              <div className="mt-4">
-                {order.foodOrderItems.map((food, index) => (
-                  <div key={index} className="flex justify-between items-center mb-3">
-                    <div>
-                      <h4 className="text-md font-semibold text-white">{food.food.name}</h4>
-                      <p className="text-gray-400">Quantity: {food.quantity}</p>
+          {userData && userData.orderedFoods.length > 0 ? (
+            userData.orderedFoods.map((order) => (
+              <div
+                key={order._id}
+                className="bg-white p-6 rounded-xl shadow-md mb-8"
+              >
+                <p className="text-lg text-gray-700">Status: {order.status}</p>
+                <p className="text-lg text-gray-700">
+                  Total Price:{" "}
+                  <strong className="text-red-600">
+                    ${order.totalPrice.toFixed(2)}
+                  </strong>
+                </p>
+                <div className="flex flex-wrap gap-6 mt-6">
+                  {order.foodOrderItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className="w-full sm:w-1/3 lg:w-1/4 bg-gray-100 p-4 rounded-xl shadow-md"
+                    >
+                      <img
+                        src={item.food.image}
+                        alt={item.food.name}
+                        className="w-full h-auto object-cover rounded-xl mb-4"
+                      />
+                      <div className="text-center">
+                        <h4 className="text-lg font-semibold text-gray-800">
+                          {item.food.name}
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          Quantity: {item.quantity}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Price: ${item.food.price}
+                        </p>
+                      </div>
                     </div>
-                    <img
-                      alt={food.food.name}
-                      className="w-12 h-12 object-cover rounded-md"
-                    />
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-center text-lg text-gray-700">
+              No orders placed yet.
+            </p>
+          )}
         </div>
       )}
     </div>

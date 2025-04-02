@@ -27,12 +27,31 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #2563eb; /* Color of the thumb when hovered */
+  background-color: #2563eb; 
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background-color: #1d4ed8; /* Color of the thumb when clicked */
+  background-color: #1d4ed8; 
 }
+
+/* Add this to your global CSS file or in a <style> block within the component */
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(20px); /* Move 10px to the right */
+  }
+  100% {
+    transform: translateX(0); /* Return to original position */
+  }
+}
+
+.animate-slide {
+  animation: slide 1s ease-in-out infinite;
+}
+
+
 
 
 

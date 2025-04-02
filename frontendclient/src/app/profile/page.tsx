@@ -1,16 +1,12 @@
 "use client";
 
 import { sendRequest } from "@/lib/send-request";
-import { useEffect, useState, } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UserData } from "@/lib/types";
 
-
 const Profile = () => {
-
-
-
   const [userData, setUserData] = useState<UserData | null>(null);
   const userLocation = localStorage.getItem("savedLocation");
   const router = useRouter();
@@ -40,7 +36,7 @@ const Profile = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gray-50">
-      <ArrowLeft className="cursor-pointer" onClick={()=> router.push("/")}/>
+      <ArrowLeft className="cursor-pointer" onClick={() => router.push("/")} />
       {/* Profile Header */}
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-gray-800">
@@ -50,13 +46,6 @@ const Profile = () => {
           <p className="text-xl text-gray-700">
             <strong>Email:</strong> {userData.email}
           </p>
-          {/* <p className="text-xl text-gray-700">
-            <strong>Role:</strong> {userData.role}
-          </p>
-          <p className="text-xl text-gray-700">
-            <strong>Status:</strong>{" "}
-            {userData.isVerified ? "Verified" : "Not Verified"}
-          </p> */}
           <p className="text-xl text-gray-700">
             <strong>Address</strong> {userLocation}
           </p>

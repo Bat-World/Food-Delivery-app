@@ -11,13 +11,16 @@ const containerStyle = { width: "100%", height: "700px" };
 const ulaanbaatarCoordinates = { lat: 47.8864, lng: 106.9057 };
 
 function MyMap() {
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
   const [isLocationSelected, setIsLocationSelected] = useState(false);
   const router = useRouter();
 
-  const { isLoaded } = useJsApiLoader({ googleMapsApiKey });
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: googleMapsApiKey || "",
+  });
 
-  // Load the saved location from localStorage on component mount
   useEffect(() => {
     const savedLocation = localStorage.getItem("savedLocation");
     if (savedLocation) {
@@ -29,7 +32,6 @@ function MyMap() {
     }
   }, []);
 
-  // Save the location to localStorage when it's updated
   useEffect(() => {
     if (location) {
       localStorage.setItem("savedLocation", JSON.stringify(location));
@@ -37,20 +39,30 @@ function MyMap() {
     }
   }, [location]);
 
-  // Handle map click to select location
-  const handleMapClick = (e) => {
+  interface LatLng {
+    lat: number;
+    lng: number;
+  }
+
+  interface MapClickEvent {
+    latLng: {
+      lat: () => number;
+      lng: () => number;
+    } | null;
+  }
+
+  const handleMapClick = (e: MapClickEvent): void => {
     if (!e.latLng) return;
-    const newLocation = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+    const newLocation: LatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
     setLocation(newLocation);
     setIsLocationSelected(true);
   };
 
-  // Confirm location and redirect to login page
   const handleConfirmLocation = () => {
     if (location) {
       localStorage.setItem("savedLocation", JSON.stringify(location));
       toast.success("Location confirmed successfully");
-      router.push("/"); // Redirect to login page
+      router.push("/");
     }
   };
 

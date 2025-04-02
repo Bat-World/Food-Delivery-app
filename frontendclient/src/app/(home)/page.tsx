@@ -4,17 +4,9 @@ import Navbar from "./_components/Navbar";
 import Order from "./_components/Order";
 import { Categories } from "./_components/Categories";
 import { Foods } from "./_components/Foods";
-import {useToken} from "@/hooks/TokenContext";
-import { useLocation } from "@/hooks/LocationContext";
 
 
 const Homepage = () => {
-
-  const { token } = useToken();
-  const { location } = useLocation();
-  console.log(token);
-  console.log(location);
-  
 
   return (
     <div className="flex flex-row h-screen">
@@ -29,7 +21,7 @@ const Homepage = () => {
         </div>
       </div>
 
-      <div className="flex-shrink-0 w-[300px]">
+      <div className="flex-shrink-0 w-[500px]">
         <Order />
       </div>
     </div>

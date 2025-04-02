@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { CartType } from "@/lib/types";
 import { sendRequest } from "@/lib/send-request";
 import { toast } from "react-toastify";
+import { ShoppingCart } from "lucide-react";
 
 interface InMyBagProps {
   setShowInMyBag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,6 +16,8 @@ export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
       return JSON.parse(localStorage.getItem("cart") || "{}");
     return {};
   });
+
+  const [loading, setLoading] = useState(false);
 
   const placeOrder = async () => {
     const token = localStorage.getItem("auth_token");
@@ -42,6 +44,8 @@ export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
     }
 
     try {
+      setLoading(true); // Start loading
+
       const { data: user } = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
       });
@@ -70,6 +74,8 @@ export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
     } catch (error) {
       console.error("Error placing the order:", error);
       toast("Failed to place order. Please try again.", { type: "error" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,9 +105,14 @@ export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
           <div className="flex justify-center mt-6">
             <button
               onClick={placeOrder}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-500 transition-all duration-300"
+              disabled={loading}
+              className="bg-red-400 px-8 py-3 rounded-lg text-white hover:scale-105 transition-all duration-300"
             >
-              Place Order
+              {loading ? (
+                <ShoppingCart className="animate-slide" />
+              ) : (
+                "Place Order"
+              )}
             </button>
           </div>
         </div>
