@@ -33,10 +33,6 @@ const Navbar = () => {
           height={100}
           className="mb-4"
         />
-<<<<<<< HEAD
-=======
-        {/* <p className="  text-white font-semibold text-xl">POSFood</p> */}
->>>>>>> 185d824 (.)
       </div>
 
       <div className="h-[40vh] w-[80%] flex flex-col items-center justify-between gap-4 mt-20">

@@ -12,11 +12,8 @@ const Profile = () => {
 
 
   const [userData, setUserData] = useState<UserData | null>(null);
-<<<<<<< HEAD
   const userLocation = localStorage.getItem("savedLocation");
-=======
   const router = useRouter();
->>>>>>> 185d824 (.)
 
   const fetchUserData = async () => {
     const token = localStorage.getItem("auth_token");
