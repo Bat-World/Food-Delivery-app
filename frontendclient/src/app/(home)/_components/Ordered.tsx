@@ -30,7 +30,7 @@ export const Orders = ({}) => {
   }, []);
 
   return (
-    <div  className="w-full max-h-[70vh] overflow-y-auto bg-[rgb(33,25,34)] rounded-lg p-6 shadow-md">
+    <div className="w-full max-h-[70vh] overflow-y-auto bg-[rgb(33,25,34)] rounded-lg p-6 shadow-md">
       <h2 className="text-2xl font-semibold text-white mb-6">Your Orders</h2>
       {loading ? (
         <ShoppingCart className="animate-slide text-white" />
@@ -60,7 +60,7 @@ export const Orders = ({}) => {
                       <img
                         src={item.food.image}
                         alt={item.food.name}
-                        className="w-full h-auto object-cover rounded-xl mb-4"
+                        className="w-full h-a object-cover rounded-xl mb-4"
                       />
                       <div className="text-center">
                         <h4 className="text-lg font-semibold text-gray-800">

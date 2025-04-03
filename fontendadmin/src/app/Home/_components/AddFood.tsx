@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, ChangeEvent } from "react";
+import { CldUploadWidget } from "next-cloudinary";
+import { Food } from "@/lib/types";
+import { sendRequest } from "@/lib/send-request";
 
 interface CloudinaryUploadWidgetInfo {
   secure_url: string;
 }
-import { CldUploadWidget } from "next-cloudinary";
-import { Food } from "@/lib/types";
-import { sendRequest } from "@/lib/send-request";
 
 interface AddFoodProps {
   setFoodsData: React.Dispatch<React.SetStateAction<Food[]>>;
@@ -21,6 +21,8 @@ const AddFood = ({ setFoodsData }: AddFoodProps) => {
     image: "",
     category: "",
   });
+
+  const [imagePreview, setImagePreview] = useState<string | null>(null); 
 
   const handleAddFood = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ const AddFood = ({ setFoodsData }: AddFoodProps) => {
         image: "",
         category: "",
       });
+      setImagePreview(null); 
     } catch (error) {
       console.error("Error adding food:", error);
     }
@@ -105,23 +108,6 @@ const AddFood = ({ setFoodsData }: AddFoodProps) => {
             required
           ></textarea>
         </div>
-        <CldUploadWidget
-          uploadPreset="ml_default"
-          onSuccess={(res) => {
-            setNewFood((prev) => ({
-              ...prev,
-              image: (res.info as CloudinaryUploadWidgetInfo).secure_url,
-            }));
-          }}
-        >
-          {({ open }) => {
-            return (
-              <button className="text-white bg-black" onClick={() => open()}>
-                Upload Food Image
-              </button>
-            );
-          }}
-        </CldUploadWidget>
         <div className="mb-4">
           <label htmlFor="category" className="block text-gray-700">
             Category
@@ -136,6 +122,39 @@ const AddFood = ({ setFoodsData }: AddFoodProps) => {
             required
           />
         </div>
+        <div className="mb-4">
+          <CldUploadWidget
+            uploadPreset="ml_default"
+            onSuccess={(res) => {
+              setNewFood((prev) => ({
+                ...prev,
+                image: (res.info as CloudinaryUploadWidgetInfo).secure_url,
+              }));
+              setImagePreview((res.info as CloudinaryUploadWidgetInfo).secure_url); // Set image preview URL
+            }}
+          >
+            {({ open }) => {
+              return (
+                <button
+                  className="text-white bg-black py-2 px-4 rounded-md"
+                  onClick={() => open()}
+                >
+                  Upload Food Image
+                </button>
+              );
+            }}
+          </CldUploadWidget>
+        </div>
+        {imagePreview && (
+          <div className="mb-4">
+            <img
+              src={imagePreview}
+              alt="Food Preview"
+              className="w-32 h-32 object-cover mx-auto border rounded-md"
+            />
+          </div>
+        )}
+        
         <button
           type="submit"
           className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"

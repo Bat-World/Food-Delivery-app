@@ -41,13 +41,12 @@ export const Foods = () => {
     <div className="w-full h-[80vw] mt-20 flex flex-col gap-20 px-10 rounded-t-[30%]">
       <div className="flex flex-wrap justify-center gap-6">
         {filteredFoods.length === 0
-          ? 
-            Array(8)
+          ? Array(8)
               .fill(0)
               .map((_, index) => (
                 <div
                   key={index}
-                  className="max-w-sm w-full bg-[rgb(33,25,34)] shadow-lg rounded-lg overflow-hidden relative"
+                  className="max-w-sm w-full i shadow-lg rounded-lg overflow-hidden relative"
                 >
                   <div className="w-full h-48 relative">
                     <Skeleton className="rounded-lg h-full bg-gray-500" />

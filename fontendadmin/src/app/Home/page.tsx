@@ -6,6 +6,7 @@ import AddFood from "./_components/AddFood";
 import FoodDisplay from "./_components/FoodDisplay";
 import ShowOrders from "./_components/ShowOrders";
 
+
 const AdminPage = () => {
   const [foodsData, setFoodsData] = useState<Food[]>([]);
   const [showOrders, setShowOrders] = useState(true);
@@ -55,7 +56,6 @@ const AdminPage = () => {
         </>
       )}
 
-      {/* Orders Display */}
     </div>
   );
 };
