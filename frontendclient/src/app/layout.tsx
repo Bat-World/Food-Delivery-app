@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import { TokenProvider } from "../hooks/TokenContext";
+import { LocationProvider } from "@/hooks/LocationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <LocationProvider>
         <TokenProvider>
-        <NuqsAdapter>{children}</NuqsAdapter>
-        <ToastContainer /></TokenProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+          <ToastContainer />
+        </TokenProvider>
+        </LocationProvider>
+       
       </body>
     </html>
   );

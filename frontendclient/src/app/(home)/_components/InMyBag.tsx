@@ -5,12 +5,16 @@ import { CartType } from "@/lib/types";
 import { sendRequest } from "@/lib/send-request";
 import { toast } from "react-toastify";
 import { ShoppingCart } from "lucide-react";
+import { useToken } from "@/hooks/TokenContext";
+import { useLocation } from "@/hooks/LocationContext";
 
 interface InMyBagProps {
   setShowInMyBag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
+  const { token } = useToken();
+  const { location } = useLocation();
   const [cart, setCart] = useState<CartType>(() => {
     if (typeof window !== "undefined")
       return JSON.parse(localStorage.getItem("cart") || "{}");
@@ -20,9 +24,6 @@ export const InMyBag: React.FC<InMyBagProps> = ({ setShowInMyBag }) => {
   const [loading, setLoading] = useState(false);
 
   const placeOrder = async () => {
-    const token = localStorage.getItem("auth_token");
-    const location = localStorage.getItem("savedLocation");
-
     if (!token) {
       toast("Please login to place an order.", { type: "error" });
       return;

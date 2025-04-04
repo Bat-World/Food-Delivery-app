@@ -5,19 +5,20 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import LogoutDialog from "../_utils/Confirmation";
+import { useToken } from "@/hooks/TokenContext";
 
 const Navbar = () => {
+  
   const { push } = useRouter();
-
+  const { token } = useToken();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const isLoggedIn = !!localStorage.getItem("auth_token");
+  const isLoggedIn = !!token;
 
   const handleLogin = () => {
     push("/login");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("auth_token");
     if (!token) {
       toast("Please login to order food", { type: "info" });
     }

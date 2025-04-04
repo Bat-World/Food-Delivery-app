@@ -24,17 +24,22 @@ export const LocationProvider = ({ children }: PropsWithChildren) => {
       const storedLocation = localStorage.getItem("savedLocation");
       console.log("storedLocation", storedLocation);
 
-      
       if (storedLocation) {
         try {
           const parsedLocation = JSON.parse(storedLocation);
           console.log("parsedLocation", parsedLocation);
 
-      
-          if (parsedLocation && typeof parsedLocation.lat === "number" && typeof parsedLocation.lng === "number") {
+          if (
+            parsedLocation &&
+            typeof parsedLocation.lat === "number" &&
+            typeof parsedLocation.lng === "number"
+          ) {
             setLocation(parsedLocation);
           } else {
-            console.error("Invalid location format in localStorage:", parsedLocation);
+            console.error(
+              "Invalid location format in localStorage:",
+              parsedLocation
+            );
           }
         } catch (error) {
           console.error("Error parsing location from localStorage:", error);

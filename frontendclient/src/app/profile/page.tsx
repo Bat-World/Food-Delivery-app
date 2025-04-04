@@ -5,14 +5,17 @@ import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UserData } from "@/lib/types";
+import { useToken } from "@/hooks/TokenContext";
+import { useLocation } from "@/hooks/LocationContext";
+
 
 const Profile = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
-  const userLocation = localStorage.getItem("savedLocation");
   const router = useRouter();
+  const { token } = useToken();
+  const { location } = useLocation();
 
   const fetchUserData = async () => {
-    const token = localStorage.getItem("auth_token");
     try {
       const response = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
@@ -47,7 +50,7 @@ const Profile = () => {
             <strong>Email:</strong> {userData.email}
           </p>
           <p className="text-xl text-gray-700">
-            <strong>Address</strong> {userLocation}
+            <strong>Address</strong> {location ? `${location.lat}, ${location.lng}` : "Not set"}
           </p>
         </div>
       </div>

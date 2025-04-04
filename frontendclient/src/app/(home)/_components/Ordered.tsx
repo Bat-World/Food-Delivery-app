@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import { UserData } from "@/lib/types";
 import { sendRequest } from "@/lib/send-request";
+import { useToken } from "@/hooks/TokenContext";
 
 export const Orders = ({}) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const { token } = useToken();
 
   const fetchUserData = async () => {
-    const token = localStorage.getItem("auth_token");
     try {
       setLoading(true);
       const response = await sendRequest.get("/user", {
@@ -26,8 +28,14 @@ export const Orders = ({}) => {
   };
 
   useEffect(() => {
-    fetchUserData();
+    setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      fetchUserData(); 
+    }
+  }, [isClient]);
 
   return (
     <div className="w-full max-h-[70vh] overflow-y-auto bg-[rgb(33,25,34)] rounded-lg p-6 shadow-md">
