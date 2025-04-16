@@ -1,9 +1,10 @@
-'use client'
+
 
 import Navbar from "./_components/Navbar";
 import Order from "./_components/Order";
 import { Categories } from "./_components/Categories";
 import { Foods } from "./_components/Foods";
+import { Suspense } from "react";
 
 
 const Homepage = () => {
@@ -17,7 +18,9 @@ const Homepage = () => {
           <Categories />
         </div>
         <div className="flex-grow overflow-y-auto mt-4">
-          <Foods />
+        <Suspense fallback={<div>Loading foods...</div>}>
+        <Foods />
+      </Suspense>
         </div>
       </div>
 
