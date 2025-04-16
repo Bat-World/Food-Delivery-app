@@ -10,7 +10,7 @@ export const Orders = ({}) => {
   const [isClient, setIsClient] = useState(false);
   const { token } = useToken();
 
-  const fetchUserData = async () => {
+  const fetchUserData = React.useCallback(async () => {
     try {
       setLoading(true);
       const response = await sendRequest.get("/user", {
@@ -25,7 +25,7 @@ export const Orders = ({}) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     setIsClient(true);
@@ -35,7 +35,7 @@ export const Orders = ({}) => {
     if (isClient) {
       fetchUserData(); 
     }
-  }, [isClient]);
+  }, [isClient, fetchUserData]);
 
   return (
     <div className="w-full max-h-[70vh] overflow-y-auto bg-[rgb(33,25,34)] rounded-lg p-6 shadow-md">

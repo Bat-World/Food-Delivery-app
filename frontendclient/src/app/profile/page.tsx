@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { UserData } from "@/lib/types";
 import { useToken } from "@/hooks/TokenContext";
 import { useLocation } from "@/hooks/LocationContext";
+import { useCallback } from "react";
 
 
 const Profile = () => {
@@ -15,7 +16,7 @@ const Profile = () => {
   const { token } = useToken();
   const { location } = useLocation();
 
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const response = await sendRequest.get("/user", {
         headers: { Authorization: "Bearer " + token },
@@ -27,11 +28,11 @@ const Profile = () => {
     } catch (error) {
       console.error("Login error:", error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
   if (!userData) {
     return <div className="text-center text-lg text-gray-700">Loading...</div>;

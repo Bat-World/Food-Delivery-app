@@ -22,7 +22,7 @@ const Navbar = () => {
     if (!token) {
       toast("Please login to order food", { type: "info" });
     }
-  }, []);
+  }, [token]);
 
   return (
     <div className="w-[200px] h-screen bg-[rgb(33,25,34)] flex flex-col items-center py-10 overflow-y-hidden">
