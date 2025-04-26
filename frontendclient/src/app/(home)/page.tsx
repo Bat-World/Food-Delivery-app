@@ -24,7 +24,7 @@ const Homepage = () => {
         </div>
       </div>
 
-      <div className="flex-shrink-0 w-[500px]">
+      <div className="flex-shrink-0 w-[30vw]">
         <Order />
       </div>
     </div>

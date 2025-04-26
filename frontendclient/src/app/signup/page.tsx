@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import { sendRequest } from "@/lib/send-request";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useMemo } from "react";
+import { CheckCircle, XCircle } from "lucide-react";
+import clsx from "clsx";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +14,10 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [touched, setTouched] = useState(false);
+  const [touchedEmail, setTouchedEmail] = useState(false);
+
+
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,7 +28,26 @@ const SignUp = () => {
       return;
     }
 
+    if (!email || !password) {
+      setError("Please fill all fields");
+      return;
+    }
+
+    const emailValid = validatedEmail.every((r) => r.isValid);
+    const passwordValid = validatedPassword.every((r) => r.isValid);
+
+    if (!emailValid) {
+      setError("Please enter a valid email");
+      return;
+    }
+
+    if (!passwordValid) {
+      setError("Password does not meet the requirements");
+      return;
+    }
+
     setLoading(true);
+    setError("");
 
     try {
       const response = await sendRequest.post("/user/signup", {
@@ -40,6 +66,51 @@ const SignUp = () => {
       setLoading(false);
     }
   };
+
+  const passwordRules = [
+    {
+      label: "At least 8 characters",
+      test: (val: string) => val.length >= 8,
+    },
+    {
+      label: "Includes a lowercase letter",
+      test: (val: string) => /[a-z]/.test(val),
+    },
+    {
+      label: "Includes an uppercase letter",
+      test: (val: string) => /[A-Z]/.test(val),
+    },
+    {
+      label: "Includes a number",
+      test: (val: string) => /[0-9]/.test(val),
+    },
+  ];
+
+  const emailRules = [
+    {
+      label: "Must include @ symbol",
+      test: (val: string) => val.includes("@"),
+    },
+    {
+      label: "Must include a valid domain",
+      test: (val: string) =>
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val),
+    },
+  ];
+
+  const validatedPassword = useMemo(() => {
+    return passwordRules.map((rule) => ({
+      ...rule,
+      isValid: rule.test(password),
+    }));
+  }, [password]);
+
+  const validatedEmail = useMemo(() => {
+    return emailRules.map((rule) => ({
+      ...rule,
+      isValid: rule.test(email),
+    }));
+  }, [email]);
 
   return (
     <div className="min-h-screen flex flex-row  justify-between bg-white">
@@ -61,11 +132,45 @@ const SignUp = () => {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (!touchedEmail) {
+                    setTouchedEmail(true);
+                  }
+                }}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                 required
               />
             </div>
+            {touchedEmail && (
+              <div className="space-y-2 mt-2">
+                <ul className="space-y-1">
+                  {validatedEmail.map((rule, idx) => (
+                    <li
+                      key={idx}
+                      className={clsx(
+                        "flex items-center gap-2 text-sm transition-all duration-300",
+                        rule.isValid ? "text-green-600" : "text-red-500"
+                      )}
+                    >
+                      {rule.isValid ? (
+                        <CheckCircle className="w-4 h-4" />
+                      ) : (
+                        <XCircle className="w-4 h-4" />
+                      )}
+                      <span
+                        className={clsx(
+                          "transition-all duration-300",
+                          rule.isValid ? "line-through opacity-70" : ""
+                        )}
+                      >
+                        {rule.label}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div>
               <label htmlFor="password" className="block text-gray-600">
                 Password:
@@ -74,11 +179,46 @@ const SignUp = () => {
                 type="password"
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (!touched) {
+                    setTouched(true);
+                  }
+                }}
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
                 required
               />
             </div>
+            {touched && (
+              <div className="space-y-2 mt-4">
+                <ul className="space-y-1">
+                  {validatedPassword.map((rule, idx) => (
+                    <li
+                      key={idx}
+                      className={clsx(
+                        "flex items-center gap-2 text-sm transition-all duration-300",
+                        rule.isValid ? "text-green-600" : "text-red-500"
+                      )}
+                    >
+                      {rule.isValid ? (
+                        <CheckCircle className="w-4 h-4" />
+                      ) : (
+                        <XCircle className="w-4 h-4" />
+                      )}
+                      <span
+                        className={clsx(
+                          "transition-all duration-300",
+                          rule.isValid ? "line-through opacity-70" : ""
+                        )}
+                      >
+                        {rule.label}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div>
               <label htmlFor="confirmPassword" className="block text-gray-600">
                 Confirm Password:
