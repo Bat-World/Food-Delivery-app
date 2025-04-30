@@ -4,11 +4,10 @@ import { House, User, LogOut, MapPinned } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import LogoutDialog from "../_utils/Confirmation";
+import LogoutDialog from "../_utils/confirmation";
 import { useToken } from "@/hooks/TokenContext";
 
 const Navbar = () => {
-  
   const { push } = useRouter();
   const { token } = useToken();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -25,7 +24,7 @@ const Navbar = () => {
   }, [token]);
 
   return (
-    <div className="w-[200px] h-screen bg-[rgb(33,25,34)] flex flex-col items-center py-10 overflow-y-hidden">
+    <div className="w-full lg:w-[200px] h-[100px] lg:h-screen flex flex-row lg:flex-col bg-[rgb(33,25,34)] items-center py-4 px-2 lg:py-10 overflow-x-auto lg:overflow-y-hidden">
       <div className="flex flex-col items-center gap-1">
         <img
           src="https://cdn-icons-png.flaticon.com/512/2101/2101264.png"

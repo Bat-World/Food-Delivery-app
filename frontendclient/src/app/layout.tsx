@@ -32,12 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <LocationProvider>
-        <TokenProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
-          <ToastContainer />
-        </TokenProvider>
+          <TokenProvider>
+            <NuqsAdapter>{children}</NuqsAdapter>
+            <ToastContainer />
+          </TokenProvider>
         </LocationProvider>
-       
       </body>
     </html>
   );

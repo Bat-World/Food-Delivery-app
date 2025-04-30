@@ -39,7 +39,7 @@ export const Foods = () => {
 
   return (
     <div className="w-full h-[80vw] mt-20 flex flex-col gap-20 px-10 rounded-t-[30%]">
-      <div className="flex flex-wrap justify-center gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 px-4">
         {filteredFoods.length === 0
           ? Array(8)
               .fill(0)
